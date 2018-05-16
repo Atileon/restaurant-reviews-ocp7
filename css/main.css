@@ -1,0 +1,56 @@
+*{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+#main-container{
+   display: flex;
+   align-content: center;
+   width: 900px;
+   /* height: 800px; */
+   margin: 5em auto;
+   background: darkslategrey;
+}
+/* ============= Map Style ==============*/
+#map{
+   width: 600px;
+   height: 600px;
+}
+/* ================= LIST STYLE ================= */
+#list-container{
+	background:red;
+	width: 400px;
+	/* height:500px; */
+}
+
+.risto-item{
+   display: flex;
+   align-items: center;
+   width:90%;
+   margin: 0 auto;
+   margin-bottom: 1em;
+   padding: .5em;
+	background:gray;
+}
+
+.risto-descr{
+   flex-basis: 70%;
+   /* background: blue; */
+}
+.risto-descr p{
+   padding: .2em;
+   font-size: 1.2em;
+}
+.risto-title{
+   flex-basis: 70%;
+	/* background: orange; */
+}
+.risto-address{
+   /* background: yellow; */
+}
+
+.risto-stars{
+   background:white;
+   flex-basis: 30%;
+   text-align: center;
+}
