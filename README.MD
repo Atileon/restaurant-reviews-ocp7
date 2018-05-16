@@ -1,0 +1,3 @@
+## Project 7 at OC based on Pure Javascript and API requests
+
+....
