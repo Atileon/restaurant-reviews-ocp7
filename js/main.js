@@ -33,28 +33,56 @@ const testRest = [
 ];
 console.log(testRest);
 
-
-const API_KEY = '';
-
-const GeoLocUrl= `https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`;
-
-const param = {
-   method: 'POST',
-}
 let coords = [];
+let latUser;
+let lngUser;
+let map;
+let apiService;
 // API REQUEST GEOLOCATION
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var myObj = JSON.parse(this.responseText);
-        console.log(myObj.location.lat);
-        coords.push(myObj);
-    }
-};
-xmlhttp.open('POST',GeoLocUrl, true);
-xmlhttp.send();
+const API_KEY = '';
+const GeoLocUrl= `https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`;
+function requestApi(url,method){
+    let methodObj={
+        method: `${method}`
+    };
+    return fetch(url,methodObj).then(response=> response.json())
+}
+//This to init the map with current coordinates of user
+function initMap(){
+    requestApi(GeoLocUrl,'POST').then(data =>{
+        console.log(data);
+        latUser = data.location.lat;
+        lngUser = data.location.lng;
+        console.log(latUser);
 
-console.log(coords);
+        let coordsUser = new google.maps.LatLng(latUser,lngUser);
+
+        map = new google.maps.Map(document.getElementById('map'),{
+            center: coordsUser,
+            zoom: 15
+        });
+        // Request to pass to Places service to get restaurants on a 500 radius from user coords
+        let request = {
+            location: coordsUser,
+            radius: '500',
+            query: 'restaurant'
+        };
+        apiService = new google.maps.places.PlacesService(map);
+        apiService.textSearch(request, callback);
+
+        function callback(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+              for (var i = 0; i < results.length; i++) {
+                var place = results[i];
+                createMarker(results[i]);
+              }
+            }
+          }
+
+    });
+    
+}
+initMap();
 // This is the main class to create Restaurant objects on the list
 class Restaurant {
    constructor(name,address,stars){

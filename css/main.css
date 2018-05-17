@@ -34,6 +34,7 @@
 }
 
 .risto-descr{
+   color: white;
    flex-basis: 70%;
    /* background: blue; */
 }
@@ -46,6 +47,7 @@
 	/* background: orange; */
 }
 .risto-address{
+   text-align: center;
    /* background: yellow; */
 }
 
