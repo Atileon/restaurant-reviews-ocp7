@@ -1,88 +1,43 @@
 //=========== Review Restaurants Project 7 Openclassrooms  ==============
-const testRest = [
-   {
-      name: 'da luigi',
-      stars: 5,
-      address: 'via Da immettere',
-   },
-   {
-      name: 'da Mario',
-      stars: 3,
-      address: 'via Da immettere',
-   },
-   {
-      name: 'da Pietro',
-      stars: 3,
-      address: 'via Da immettere',
-   },
-   {
-      name: 'da Oscar',
-      stars: 3,
-      address: 'via Da immettere',
-   },
-   {
-      name: 'da Leopoldo',
-      stars: 3,
-      address: 'via Da immettere',
-   },
-   {
-      name: 'da Craco',
-      stars: 3,
-      address: 'via Da immettere',
-   }
-];
-console.log(testRest);
 
-let coords = [];
-let latUser;
-let lngUser;
-let map;
-let apiService;
-// API REQUEST GEOLOCATION
-const API_KEY = '';
-const GeoLocUrl= `https://www.googleapis.com/geolocation/v1/geolocate?key=${API_KEY}`;
-function requestApi(url,method){
-    let methodObj={
-        method: `${method}`
-    };
-    return fetch(url,methodObj).then(response=> response.json())
-}
-//This to init the map with current coordinates of user
-function initMap(){
-    requestApi(GeoLocUrl,'POST').then(data =>{
-        console.log(data);
-        latUser = data.location.lat;
-        lngUser = data.location.lng;
-        console.log(latUser);
+  // Initialize the GoogleMap API
+  function initMap(){
+    let latUser;
+    let lngUser;
 
-        let coordsUser = new google.maps.LatLng(latUser,lngUser);
-
-        map = new google.maps.Map(document.getElementById('map'),{
-            center: coordsUser,
-            zoom: 15
+    // you will decide what to do with the position passed as argument from the getCurrentPosition()method from Geolocation API using the following function 
+    function theMap(position) {
+        let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+       console.log(location);
+        let map = new google.maps.Map(document.getElementById('map'), {
+            position: location,
+            zoom: 12,
+            disableDefaultUI: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         });
-        // Request to pass to Places service to get restaurants on a 500 radius from user coords
-        let request = {
-            location: coordsUser,
-            radius: '500',
-            query: 'restaurant'
-        };
-        apiService = new google.maps.places.PlacesService(map);
-        apiService.textSearch(request, callback);
+      
+        let marker = new google.maps.Marker({
+            map: map,
+            position: location,
+            animation: google.maps.Animation.DROP,
+            title: "This is your location"
+        });
+      
+        map.setCenter(location);
+      }
+      // show error if location can't be found
+    function errorMessage() {
+        alert("Location can't be found");
+      }
+      // execute geolocation
+    (navigator.geolocation)?
+    navigator.geolocation.getCurrentPosition(theMap, errorMessage):
+    alert("Your browser does not support Geolocation.");
+      
+  }
 
-        function callback(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-              for (var i = 0; i < results.length; i++) {
-                var place = results[i];
-                createMarker(results[i]);
-              }
-            }
-          }
 
-    });
-    
-}
-initMap();
+
 // This is the main class to create Restaurant objects on the list
 class Restaurant {
    constructor(name,address,stars){
@@ -128,19 +83,29 @@ class Restaurant {
       itemEl.appendChild(starsEl);
       
       
-      console.log(`${this.name} has been created`);
+      console.log(`${this.name} has been Rendered On DOM`);
    }
 }
-const elements = [];
 
-function restaurant (name,address,stars,bool){
+
+function restaurantOnDom (name,address,stars){
  let obj = new Restaurant(name,address,stars);
- elements.push(obj);
- console.log('element created');
-//  (bool)? obj.drawIt(): null;
+ console.log(`${obj.name} has been created`);
+ obj.drawIt();
 }
-console.log(elements);
-testRest.map(obj => {
-   restaurant(obj.name,obj.address,obj.stars,true);
-});
-elements.map(obj => obj.drawIt());
+
+function reqJSON(){
+    // Love fetchAPI
+    // We gotta request items from the json file and go through a then concatenations step by step 
+    fetch('./js/restaurants.json')
+    .then(result => result.json())//results parsed from json to objects
+    .then(data => {
+        console.log(data);
+        // mapping the objects and executing the restaurant function which creates Objects to render on DOM
+       data.map((item)=> {
+           // Lets create objects
+            restaurantOnDom(item.name,item.address,item.stars);
+        });
+    });//end of then concatenation
+}
+reqJSON();
