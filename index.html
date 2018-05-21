@@ -9,6 +9,10 @@
 </head>
 <body>
    <div id="main-container">
+         <!-- <div id="searchText">
+                  <input id="address" type="textbox" value="Sydney, NSW">
+                  <input type="button" value="Encode" onclick="codeAddress()">
+         </div> -->
       <div id="map"></div>
       <div id="list-container">
             <!-- Here the content -->
@@ -18,9 +22,10 @@
 
 
 
-   <script src="./js/main.js"></script>
-   <!-- <script async defer
-   src="https://maps.googleapis.com/maps/api/js?key=API_KEY&v=3.31&callback=initMap"></script> -->
+   
+   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&v3.31&libraries=places"></script>
+
+   <script src="./js/avaMap.js"></script>
    
 </body>
 </html>

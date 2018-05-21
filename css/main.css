@@ -6,53 +6,58 @@
 #main-container{
    display: flex;
    align-content: center;
-   width: 900px;
+   width: 100vw;
+   height: 100vh;
    /* height: 800px; */
-   margin: 5em auto;
+   margin: 0 auto;
    background: darkslategrey;
 }
 /* ============= Map Style ==============*/
 #map{
-   width: 600px;
-   height: 600px;
+   width: 70%;
+   min-height: 600px;
 }
 /* ================= LIST STYLE ================= */
 #list-container{
 	background:red;
-	width: 400px;
+   width: 30%;
+   overflow: scroll;
 	/* height:500px; */
 }
 
 .risto-item{
    display: flex;
    align-items: center;
-   width:90%;
+   width:100%;
    margin: 0 auto;
-   margin-bottom: 1em;
+   margin-bottom: .2em;
    padding: .5em;
 	background:gray;
 }
 
 .risto-descr{
    color: white;
-   flex-basis: 70%;
+   flex-basis: 80%;
    /* background: blue; */
 }
 .risto-descr p{
    padding: .2em;
-   font-size: 1.2em;
 }
 .risto-title{
+   text-align: left;
+   font-size: 1.5em;
    flex-basis: 70%;
 	/* background: orange; */
 }
+
 .risto-address{
-   text-align: center;
+   text-align: left;
    /* background: yellow; */
 }
 
 .risto-stars{
+   font-size: 1.6em;
    background:white;
-   flex-basis: 30%;
+   flex-basis: 20%;
    text-align: center;
 }
