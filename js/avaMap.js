@@ -1,7 +1,7 @@
 //=========== Review Restaurants Project 7 Openclassrooms  ==============
 
 class Restaurant {
-   constructor(name,address,stars){
+   constructor(ristObject){
       this.listCont = 'list-container';//Main list Container
       this.descrClass = 'risto-descr'; //Class for description container (name & address)
       this.itemClass = 'risto-item';// Class for the item
@@ -10,11 +10,13 @@ class Restaurant {
       this.starsClass = 'risto-stars';// class for the Restaurant stars
 
       //Properties to get on constructor from API data
-      this.name = name;
-      this.address = address;
-      this.stars = stars;
+      this.ristObj = ristObject;
+      this.name = this.ristObj.name;
+      this.address = this.ristObj.vicinity;
+      this.stars = this.ristObj.rating;
+      this.id = this.ristObj.place_id;
    }
-   drawIt(){
+   ristoItem(){
       // The container
       let cont = document.getElementById(this.listCont);
       let descrEl = document.createElement('div');
@@ -22,11 +24,12 @@ class Restaurant {
 
       // The Item Container
       let itemEl = document.createElement('div');
+      itemEl.id = this.id;
       itemEl.className = this.itemClass;
       // The restaurant's name element
       let nameEl = document.createElement('p');
       nameEl.className = this.nameClass;
-      nameEl.textContent = `Restaurant: "${this.name}"`;
+      nameEl.textContent = `"${this.name}"`;
       // The address element
       let addressEl = document.createElement('p');
       addressEl.className = this.addrClass;
@@ -34,7 +37,7 @@ class Restaurant {
       // The stars element
       let starsEl = document.createElement('div');
       starsEl.className = this.starsClass;
-      starsEl.textContent = this.stars;
+      starsEl.textContent = (this.stars)?`${this.stars} \u2606`: 0;
       
       // Appending elements created
       cont.appendChild(itemEl);
@@ -43,27 +46,60 @@ class Restaurant {
       descrEl.appendChild(addressEl);
       itemEl.appendChild(starsEl);
       
-      
+      itemEl.addEventListener('mouseenter',()=>{
+        console.log(itemEl.dataset.placeId);
+      });
       console.log(`${this.name} has been Rendered On DOM`);
    }
-   ristoMark(result){
-      let pos = result.geometry.location;
+   
+   ristoMark(){
+      let pos = this.ristObj.geometry.location;
+
+      let content = {
+        content: `
+       <div>This place is called ${this.name}, and the rating of this is ${this.stars}</div>
+      `};
+      let info = new google.maps.InfoWindow(content);
+
       let markOpt = {
          map: map,
+         icon: this.icon,
          opacity: 0.8,
          position: pos,
          animation: google.maps.Animation.DROP,
-         title: result.name
+         title: this.name
       }
+      let selEl = document.getElementById(this.id);
       let marker = new google.maps.Marker(markOpt);
+      marker.setMap(map);
+      marker.addListener('click',()=> {
+        info.open(map,marker);
+        
+        
+        console.log(selEl.id);
+        if(this.id === selEl.id){
+          // allItems.classList.remove('selected');
+          selEl.classList.add('selected');
+        }
+      });
+      map.addListener('click',() => {
+        
+        info.close();
+        selEl.classList.remove('selected');
+      });
+
+      
+
    }
+   
+   
 }
 
 
 let map;
 let geoCoder
 let infowindow;
-let service;
+let servicePlace;
 let search;
 
 let userPos;
@@ -81,6 +117,10 @@ function initMap(position){
       lat: position.coords.latitude,
       lng: position.coords.longitude
    }
+   // the infowindow object
+  //  infowindow = new google.maps.InfoWindow({
+  //    content: 'Content string to show'
+  //  });
    geoCoder = new google.maps.Geocoder();
    //  Testing the search results into a input text
    // let inputSearch;
@@ -93,8 +133,8 @@ function initMap(position){
    //       console.log(thePlace);
    // });
 
-    var latlng = new google.maps.LatLng(userPos);
-    var mapOptions = {
+    let latlng = new google.maps.LatLng(userPos);
+    let mapOptions = {
       zoom: 15,
       center: latlng,
       backgroundColor: '#0a0808',
@@ -137,45 +177,59 @@ function initMap(position){
    }
    let marker = new google.maps.Marker(markOpt);
 
-   // places service
-   service = new google.maps.places.PlacesService(map);
+   // places servicePlace
+   servicePlace = new google.maps.places.PlacesService(map);
    let nearbyReq = {
       location: latlng,
-      radius: '1500',
+      radius: '1000',
       type: ['restaurant'],
-      keyword: 'food',
       rankBy: google.maps.places.RankBy.PROMINENCE
    }
-   service.nearbySearch(nearbyReq,toRestaurants);
+   //So, we search for restaurants near by user position and pass it on toRestaurants() function to create restaurant objects from the response of service
+   servicePlace.nearbySearch(nearbyReq,toRestaurants);
 
 }//End of main function
-
+  const restaurantArr = [];
+  //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
    function toRestaurants(results, status){
+     // This is the main if statement to verify Status of request and launch the entire app to create Restaurants objects and get details of each one
       if(status =='OK'){
+        // So, We map the results to get details of each place
          results.map(result=>{
-            console.log(result);
-            let newObj = new Restaurant(result.name,result.vicinity,result.rating);
-            newObj.drawIt();
-            newObj.ristoMark(result);
+            // console.log(result);
+            let reqDetails = {
+              placeId: result.place_id,
+            }
+            servicePlace.getDetails(reqDetails,(place,status)=>{
+              
+              if(status=== google.maps.places.PlacesServiceStatus.OK) {
+                console.log(place);
+                let newRisto = new Restaurant(place);
+                newRisto.ristoItem();
+                newRisto.ristoMark();
+              }
+            });
+
          });
+         
       }
    }
 
-  function codeAddress() {
-    var address = document.getElementById('address').value;
-    console.log(address);
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == 'OK') {
-         let response = results[0].geometry.location;
-         map.panTo(response);
-         // map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: map,
-            position: response
-        });
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+  // function codeAddress() {
+  //   let address = document.getElementById('address').value;
+  //   console.log(address);
+  //   geocoder.geocode( { 'address': address}, function(results, status) {
+  //     if (status == 'OK') {
+  //        let response = results[0].geometry.location;
+  //        map.panTo(response);
+  //        // map.setCenter(results[0].geometry.location);
+  //       let marker = new google.maps.Marker({
+  //           map: map,
+  //           position: response
+  //       });
+  //     } else {
+  //       alert('Geocode was not successful for the following reason: ' + status);
+  //     }
+  //   });
       
-   }
+  //  }
