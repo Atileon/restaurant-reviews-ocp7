@@ -10,15 +10,24 @@ class Restaurant {
       this.starsClass = 'risto-stars';// class for the Restaurant stars
 
       //Properties to get on constructor from API data
+      //NOTE: When Object is created if on the response from API some value doesn't exists the object wouldn't be created and throw an Error on console because of value undefined
       this.ristObj = ristObject;
+      this.photos = this.ristObj.photos;
+      this.photo= (!this.photos)?'':this.ristObj.photos[0].getUrl({maxWidth:200,maxHeight:200});
       this.name = this.ristObj.name;
       this.address = this.ristObj.vicinity;
       this.stars = this.ristObj.rating;
+      this.open = this.ristObj.opening_hours.open_now;
+      this.toGoogle = this.ristObj.url;
+      this.phone = this.ristObj.international_phone_number;
+      this.website = this.ristObj.website;
       this.id = this.ristObj.place_id;
-
+      //the global marker array
       this.markArr = markArr;
+      //state to switch restaurant map marker on/off 
       this.switchMarker = 0;
    }
+  
    ristoItem(){
       // The container
       let cont = document.getElementById(this.listCont);
@@ -48,22 +57,25 @@ class Restaurant {
       descrEl.appendChild(nameEl);
       descrEl.appendChild(addressEl);
       itemEl.appendChild(starsEl);
+      //Switch on/off the markers when item on list is clicked
       this.switchMarker = 0;
       itemEl.addEventListener('click',(e)=>{
         if(e.type==='click'){
           this.switchMarker++;
         }
-        console.log(this.switchMarker);
+        // console.log(this.switchMarker);
           if(this.switchMarker === 1){
             this.ristoMark(true);
             itemEl.classList.add('selected');
           }else if(this.switchMarker === 2){
             itemEl.classList.remove('selected');
+            //set null on setMap() method for every marker on array
             this.markArr.map(mark => mark.setMap(null));
+            //thus, clear the markers array to reset
             this.markArr = []
             this.switchMarker = 0;
           }
-          console.log(this.switchMarker);
+          // console.log(this.switchMarker);
         
       });
       // itemEl.addEventListener('')
@@ -73,12 +85,22 @@ class Restaurant {
    ristoMark(bool){
       
       let pos = this.ristObj.geometry.location; 
-      let content = {
-        content: `
-       <div>This place is called ${this.name}, and the rating of this is ${this.stars}</div>
-      `};
+      let content = this.showDetails();
+      let litleInfoOpen = (this.open)?'Open!':'Closed';
+      let litleContent = {
+        content:`
+        <div class="litle-info">
+          <h4 class="litle-name">${this.name}</h4>
+          <div class="litle-desc">
+            <div class="litle-img"><img src="${this.photo}"></img></div>
+            <div class="litle-ratings"><p>${this.stars}\u2606</p><p><span class="litle-open">${litleInfoOpen}</span></p></div>
+          </div>
+        </div>
+        `,
+        maxWidth:200
+      };
       let info = new google.maps.InfoWindow(content);
-
+      let litleInfo = new google.maps.InfoWindow(litleContent);
       let markOpt = {
          map: map,
          icon: this.icon,
@@ -93,10 +115,15 @@ class Restaurant {
       console.log(this.markArr);
       (bool === true)? marker.setMap(map): '';
       (bool === false)?marker.setMap(null): '';
+      marker.addListener('mouseover',()=>{
+        litleInfo.open(map,marker);
+      });
+      marker.addListener('mouseout',()=>{
+        litleInfo.close();
+      });
       marker.addListener('click',()=> {
+        litleInfo.close();
         info.open(map,marker);
-        
-        
         console.log(selEl.id);
         if(this.id === selEl.id){
           // allItems.classList.remove('selected');
@@ -113,16 +140,43 @@ class Restaurant {
       });
    }
    
-   
+   showDetails(){
+     let open = (this.open)?`We are open`:`Sorry, we are closed.`;
+    let content = {
+      content: `
+      <div class="cont-detail">
+      <h2>${this.name}</h2>
+      <div class="details">
+         <div class="photo">
+            <img src=${this.photo} alt="${this.name}">
+         </div>
+         <div class="description-risto">
+            <p>Rating: ${this.stars} \u2606 </p>
+            <p>${open}</p>
+            <p>${this.address}</p>
+            <p>Call us: <a href="tel:${this.phone}">${this.phone}</a></p>
+            <p> <a href="${this.website}" class="website" target="_blank">${this.website}</a> </p>
+         </div>
+        </div>
+        <div class="link"><a href="${this.toGoogle}" target="_blank">view on googlemap</a></div>
+       </div>
+    `,
+      maxWidth:500
+    };
+    return content;
+   }
 }//end Restaurant class
 
 
 let map;
 let geoCoder
 let infowindow;
-let servicePlace;
+let litleInfo;
+let service;
 let search;
-let ristoArr =[];
+let ristoArray =[];
+let markArray =[];
+let reqArr=[];//array requests for details
 let userPos;
 
 (navigator.geolocation)?navigator.geolocation.getCurrentPosition(initMap, errorMessage):alert("Your browser does not support Geolocation.");
@@ -133,7 +187,7 @@ function errorMessage() {
 }
 
 //This the main function 
-function initMap(position){
+ function initMap(position){
    userPos= {
       lat: position.coords.latitude,
       lng: position.coords.longitude
@@ -142,7 +196,7 @@ function initMap(position){
   //  infowindow = new google.maps.InfoWindow({
   //    content: 'Content string to show'
   //  });
-   geoCoder = new google.maps.Geocoder();
+  //  geoCoder = new google.maps.Geocoder();
    //  Testing the search results into a input text
    // let inputSearch;
    // inputSearch = document.getElementById('searchPlace');
@@ -161,23 +215,24 @@ function initMap(position){
       backgroundColor: '#0a0808',
       disableDefaultUI: true,
       styles:[
-          {'elementType': 'geometry', 'stylers': [{color: '#443d35'}]},
+        
+          {'elementType': 'geometry', 'stylers': [{color: '#00272B'}]},
           {'elementType': 'labels.text.stroke', 'stylers': [{color: '#000000'}]},
           {'elementType': 'labels.text.fill', 'stylers': [{color: '#ffffff'}]},
           {
-            'featureType': 'administrative.locality',
+            'featureType': 'poi',
             'elementType': 'all',
             'stylers': [{'visibility':'off'}]
           },
           {
             featureType: 'road',
             elementType: 'geometry',
-            stylers: [{color: '#f26144'}]
+            stylers: [{color: '#FF6663'}]
           },
           {
             featureType: 'road',
             elementType: 'geometry.stroke',
-            stylers: [{color: '#6f6457'}]
+            stylers: [{color: '#000000'}]
           },
           {
             featureType: 'road',
@@ -199,51 +254,62 @@ function initMap(position){
    let marker = new google.maps.Marker(markOpt);
 
    // places servicePlace
-   servicePlace = new google.maps.places.PlacesService(map);
+   service = new google.maps.places.PlacesService(map);
    let nearbyReq = {
       location: latlng,
-      radius: '1000',
+      radius: '2000',
       type: ['restaurant'],
       rankBy: google.maps.places.RankBy.PROMINENCE
    }
    //So, we search for restaurants near by user position and pass it on toRestaurants() function to create restaurant objects from the response of service
 
-   servicePlace.nearbySearch(nearbyReq,toRestaurants);
-
+   service.nearbySearch(nearbyReq,fromNearby);
+   console.log(reqArr);
+   
 }//End of main function
 
   //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
-   function toRestaurants(results, status){
-     
-     // This is the main if statement to verify Status of request and launch the entire app to create Restaurants objects and get details of each one
-      if(status =='OK'){
-        // So, We map the results to get details of each place
-         results.map(result=>{
-            // console.log(result);
-            let reqDetails = {
-              placeId: result.place_id,
-            }
-            servicePlace.getDetails(reqDetails,(place,status)=>{
-              
-              if(status=== google.maps.places.PlacesServiceStatus.OK) {
-                console.log(place);
-                let newRisto = new Restaurant(place,ristoArr);
-                newRisto.ristoItem();
-                // newRisto.ristoMark(false);
-              }
-            });
 
-         });
-         
+
+// TODO functions improvements
+  function fromNearby(results,status,pagination){
+    if(status === 'OK'){let response = results;
+      //implement the sort on response
+      //TODO> Filter functions
+      response.filter((a)=> a.rating >2 && a.rating <= 5 )
+      //Sorting response objects
+      .sort((a,b)=> a.rating-b.rating)
+      //concatenate array.map method
+      .map(res => {
+        // console.log(res);
+        //request object literal to be passed on getDetails service
+        let req = {
+          placeId: res.place_id
+        };
+        service.getDetails(req,toRestaurants);
+        reqArr.push(req);
+      }); 
+    return reqArr;
+    }
+  }
+  console.log(reqArr);
+
+  //Convert place details results into Restaurant Objects
+  function toRestaurants(place,status){
+    if(status=== 'OK') {
+      let thePlace =  place;
+      console.log(place);
+      //create Object
+      let newRisto =  new Restaurant(thePlace,markArray);
+      newRisto.ristoItem();
       }
-   }
+  }
+  
+// ============================================
 
-   function showMarkers(){
-     markOn();
-   }
-   function hideMarkers(){
-     markOff();
-   }
+
+
+
 
   // function codeAddress() {
   //   let address = document.getElementById('address').value;

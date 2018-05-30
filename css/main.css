@@ -75,3 +75,96 @@
    background:rgb(78, 57, 18);
 
 }
+/* ============== Show Details POPUP ============ */
+.cont-detail{
+   width: 100%;
+    min-height: 100px;
+    border-radius: 5px;
+    color: #640000;
+}
+.cont-detail h2{
+   text-align: center;
+   padding: .5em;
+   font-size: 2em;
+}
+.details{
+	display:flex;	
+}
+.photo{
+   flex: 40%;
+   padding-left: .5em;;
+}
+.photo img{
+   width: 100%;
+   height: 150px;
+   border-radius: 5px;
+   padding: .1em;
+   background: #4b1212;
+   object-fit: cover;
+   transition: all .3s ease-in-out;
+}
+.photo img:hover{
+   transform: scale(1.5) translateX(100px);
+    box-shadow: 0px -3px 10px #4b1212;
+}
+.description-risto{
+   flex: 50%;
+   padding: .5em;
+   padding-left: 1.5em;
+}
+.description-risto p{
+   font-size: 1.2em;
+   font-weight: 500;
+   margin-bottom: 1em;
+}
+.link{
+   color: white;
+   font-size: 1.2em;
+   width: 100%;
+   background: #460202;
+   margin-top: 1em;
+   padding: .3em;
+   text-align: center;
+   border-radius: 0px 0px 5px 5px;
+   box-shadow: 0px -2px 4px #000;
+}
+.link a{
+   text-decoration:underline;
+   color: orange;
+}
+.website{
+   color: white;
+}
+/* ========== Litle info ======= */
+.litle-info{
+   width: 100%;
+   color: #4b1212;
+}
+.litle-name{
+   text-align: center;
+    font-size: 1.6em;
+    padding-bottom: .3em;
+}
+.litle-desc{
+   display: flex;
+}
+.litle-img{
+   flex: 60%;
+}
+
+.litle-img img{
+   width: 100% !important;
+   max-height: 100px;
+   object-fit: cover;
+}
+.litle-ratings{
+   flex: 40%;
+   font-size: 2.5em;
+   padding-left: .5em;
+}
+.litle-ratings p{
+   text-shadow: 0px 1px 1px #000;
+}
+.litle-open{
+   font-size: .7em;
+}
