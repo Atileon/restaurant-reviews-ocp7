@@ -130,7 +130,7 @@ class Restaurant {
           selEl.classList.add('selected');
         }
       });
-      map.addListener('click',() => {
+      map.addListener('dblclick',() => {
         // this.ristoMark('off');
         this.markArr.map(mark => mark.setMap(null));
         this.markArr = [];
@@ -178,6 +178,7 @@ let ristoArray =[];
 let markArray =[];
 let reqArr=[];//array requests for details
 let userPos;
+let marksOnOff = false;
 
 (navigator.geolocation)?navigator.geolocation.getCurrentPosition(initMap, errorMessage):alert("Your browser does not support Geolocation.");
 
@@ -214,6 +215,11 @@ function errorMessage() {
       center: latlng,
       backgroundColor: '#0a0808',
       disableDefaultUI: true,
+      zoomControl: true,
+      gestureHandling: 'cooperative',
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+      },
       styles:[
         
           {'elementType': 'geometry', 'stylers': [{color: '#00272B'}]},
@@ -265,7 +271,6 @@ function errorMessage() {
 
    service.nearbySearch(nearbyReq,fromNearby);
    console.log(reqArr);
-   
 }//End of main function
 
   //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
@@ -293,18 +298,42 @@ function errorMessage() {
     }
   }
   console.log(reqArr);
+  async function deployMarkers(val,obj){
+    if(val === true){
+      return obj.ristoMark(true);
+    }else{
+      return obj.ristoMark(false);
+    }
+  }
 
+  async function btnMarkers(){
+    console.log('OOPS');
+    console.log(markArray);
+    (marksOnOff)?markArray.map(item => item.setMap(null)):markArray.map(item => item.setMap(map));
+    marksOnOff = !marksOnOff;
+  }
+
+
+  // allMarkers = false;
   //Convert place details results into Restaurant Objects
   function toRestaurants(place,status){
     if(status=== 'OK') {
       let thePlace =  place;
-      console.log(place);
+      // console.log(place);
       //create Object
       let newRisto =  new Restaurant(thePlace,markArray);
       newRisto.ristoItem();
-      }
+      newRisto.ristoMark(marksOnOff);
+      btnMarkers();
+      
+      // ristoArray.push(newRisto);
+      // deployMarkers(marksOnOff,newRisto);
+      // newRisto.ristoMark(true);
+
+    }
+      return ristoArray;
   }
-  
+  console.log(markArray)
 // ============================================
 
 
