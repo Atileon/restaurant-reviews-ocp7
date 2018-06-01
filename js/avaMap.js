@@ -273,11 +273,14 @@ function errorMessage() {
   sortEl.addEventListener('change',searchNear);
   btnMarks.addEventListener('click',btnMarkers);
   function btnMarkers(){
-    console.log(markArray);
+    // console.log(markArray);
     
     (marksOnOff)?markArray.map(item => item.setMap(null)):markArray.map(item => item.setMap(map));
     // markArray=[];
     marksOnOff = !marksOnOff;
+    (marksOnOff)?btnMarks.classList.add('mark-on'):btnMarks.classList.remove('mark-on');
+    (marksOnOff)?btnMarks.textContent='Marks: ON':btnMarks.textContent='Marks: OFF';
+    console.log(marksOnOff);
     // searchNear();
   }
 
@@ -291,7 +294,7 @@ function errorMessage() {
   }
   // ^- service.nearbySearch(nearbyReq,fromNearby);
   searchNear();
-   console.log(reqArr);
+  //  console.log(reqArr);
    // more results button listener
    morebtn.addEventListener('click',()=>{
      morebtn.disabled = true;
@@ -315,10 +318,11 @@ function errorMessage() {
       //TODO> Filter functions
       console.log(sortVal);
       morebtn.disabled = !pagination.hasNextPage;
+      (!morebtn.disabled)?morebtn.textContent='There\'s More Restaurants!':morebtn.textContent='No More Restaurants by now';
       getMore = pagination.hasNextPage && function(){
         pagination.nextPage();
       };
-      console.log(getMore);
+      // console.log(getMore);
 
       response.filter((a)=> a.rating >= sortVal);
       // //Sorting response objects

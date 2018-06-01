@@ -18,13 +18,20 @@
    min-height: 600px;
 }
 /* ================= LIST STYLE ================= */
+#list-container::-webkit-scrollbar {
+    width: .5em;
+    background: #4b1212;
+}
+#list-container::-webkit-scrollbar-thumb{
+    background: #917a2e;
+}
 #right-container{
     width: 30%;
     height: 100%;
     overflow: hidden;
 }
 #list-container{
-	background:red;
+	background:#4c1010;
    width: 100%;
    height: 100%;
    overflow-y: scroll;
@@ -183,9 +190,110 @@
     z-index: 100;
 }
 #legend {
+    position: absolute;
+    left: 3em;
+    bottom: 3em;
     font-family: Arial, sans-serif;
     background: #fff;
     padding: 10px;
     margin: 10px;
     border: 3px solid #000;
+
   }
+
+/* ==============  UI   ================ */
+button:focus , select:focus{
+    outline: none;
+}
+#ui-buttons{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    background: #460202;
+}
+
+#btnMarks{
+    width: 50%;
+    padding: .7em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    background: #e64133;
+    border: none;
+    /* border-bottom: 2px solid green; */
+    color: #fff;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: all .1s ease-in-out;
+}
+#btnMarks:active{
+    transform: translateY(2px);
+}
+#btnMarks.mark-on{
+    background: #e0b31e !important;
+    text-shadow: 0px 2px 5px #000;
+
+}
+#ui-sort{
+    display: flex;
+}
+#ui-sort *{
+    flex: 1;
+    padding: .2em;
+}
+#ui-sort .btn{
+    background: #e64133;
+    border: none;
+    color: #ffff0e;
+}
+#sort-elements{
+    padding: .5em;
+    background: #e64133;
+    border-right: 1px solid #4b1212;
+}
+#sort-elements label{
+    color: white;
+    font-size: 1.2em;
+    text-shadow: 1px 2px 4px #000;
+}
+#ratingSel{
+    width: 100%;
+    background: #e64133;
+    border: none;
+    color: #ffff0e;
+    font-size: 1em;
+}
+#ui-sort button.asc{
+    border-right:1px solid #460202;
+}
+#more-container{
+    position: relative;
+    z-index: 100;
+    width: 100%;
+    padding-bottom: .1em;
+    background: #4b1212;
+}
+#more{
+    background: #950606;
+    color: #f0bd14;
+    text-transform: capitalize;
+    padding: 1em;
+    font-size: 1.1em;
+    width: 100%;
+    border: none;
+    box-shadow: 0px 3px 4px #000;
+    transition: all .2s ease-in-out;
+}
+#more:hover{
+    box-shadow: 0px 4px 7px #000;
+}
+#more:active{
+    box-shadow: none;
+}
+#more:disabled{
+    font-size: .9em;
+    background: #4b1212;
+    color: #917a2e;
+    box-shadow: none;
+    border-bottom: 2px solid #460202;
+}

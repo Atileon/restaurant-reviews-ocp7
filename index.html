@@ -17,21 +17,32 @@
             <div id="map"></div>
 
             <div id="right-container">
-                  <div class="ui-buttons">
-                        <button id="btnMarks" >Toggle Marks</button>
-                        <button class="btn">ASC</button>
-                        <button class="btn">DESC</button>
-                        <button id="more">More Results</button>
+                  <div id="ui-buttons">
+                        <button id="btnMarks" class="mark-on" >Marks ON</button>
                   </div>
-                  <form>
-                        <select id="ratingSel" name="ratingSel">
-                              <option value='6' >All</option>
-                              <option value='3' >3 Stars</option>
-                              <option value='4' >4 Stars</option>
-                              <option value='5' >5 Stars</option>
-                        </select>
+                  <form id="ui-sort">
+                        <div id="sort-elements">
+                              <label for="ratingSel">Sort by: </label>
+                              <select id="ratingSel" name="ratingSel">
+                                    <option value='6' >All</option>
+                                    <option value='3' >3 Stars</option>
+                                    <option value='4' >4 Stars</option>
+                                    <option value='5' >5 Stars</option>
+                              </select>
+                        </div>
+                        
+                        <button class="btn asc">ASC</button>
+                        <button class="btn desc">DESC</button>
                   </form>
-                  <div id="list-container"></div>
+                  <div id="more-container">
+                        
+                        <button name='more' id="more">More Results</button>
+                  </div>
+                  <div id="list-container">
+                        
+                  </div>
+                  
+                  
                   <!-- Here the content -->
             </div>
       <!-- The Legend Box -->
