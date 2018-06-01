@@ -10,7 +10,10 @@ class Restaurant {
       this.starsClass = 'risto-stars';// class for the Restaurant stars
 
       //Properties to get on constructor from API data
-      //NOTE: When Object is created if on the response from API some value doesn't exists the object wouldn't be created and throw an Error on console because of value undefined
+      //NOTE: When Object is created if on the response 
+      //from API some value doesn't exists the object 
+      //wouldn't be created and throw an Error on console 
+      //because of undefined value
       this.ristObj = ristObject;
       this.photos = this.ristObj.photos;
       this.photo= (!this.photos)?'':this.ristObj.photos[0].getUrl({maxWidth:200,maxHeight:200});
@@ -24,8 +27,6 @@ class Restaurant {
       this.id = this.ristObj.place_id;
       //the global marker array
       this.markArr = markArr;
-      //state to switch restaurant map marker on/off 
-      this.switchMarker = 0;
    }
   
    ristoItem(){
@@ -57,33 +58,12 @@ class Restaurant {
       descrEl.appendChild(nameEl);
       descrEl.appendChild(addressEl);
       itemEl.appendChild(starsEl);
-      //Switch on/off the markers when item on list is clicked
-      this.switchMarker = 0;
-      itemEl.addEventListener('click',(e)=>{
-        if(e.type==='click'){
-          this.switchMarker++;
-        }
-        // console.log(this.switchMarker);
-          if(this.switchMarker === 1){
-            this.ristoMark(true);
-            itemEl.classList.add('selected');
-          }else if(this.switchMarker === 2){
-            itemEl.classList.remove('selected');
-            //set null on setMap() method for every marker on array
-            this.markArr.map(mark => mark.setMap(null));
-            //thus, clear the markers array to reset
-            this.markArr = []
-            this.switchMarker = 0;
-          }
-          // console.log(this.switchMarker);
-        
-      });
-      // itemEl.addEventListener('')
+
       console.log(`${this.name} has been Rendered On DOM`);
    }
    
    ristoMark(bool){
-      
+      let locMarkArr = this.markArr;
       let pos = this.ristObj.geometry.location; 
       let content = this.showDetails();
       let litleInfoOpen = (this.open)?'Open!':'Closed';
@@ -112,7 +92,7 @@ class Restaurant {
       let selEl = document.getElementById(this.id);
       let marker = new google.maps.Marker(markOpt);
       this.markArr.push(marker);
-      console.log(this.markArr);
+      // console.log(this.markArr);
       (bool === true)? marker.setMap(map): '';
       (bool === false)?marker.setMap(null): '';
       marker.addListener('mouseover',()=>{
@@ -121,6 +101,7 @@ class Restaurant {
       marker.addListener('mouseout',()=>{
         litleInfo.close();
       });
+      // marker/selEl listeners to open info window
       marker.addListener('click',()=> {
         litleInfo.close();
         info.open(map,marker);
@@ -130,14 +111,29 @@ class Restaurant {
           selEl.classList.add('selected');
         }
       });
-      map.addListener('dblclick',() => {
-        // this.ristoMark('off');
-        this.markArr.map(mark => mark.setMap(null));
-        this.markArr = [];
-        this.switchMarker = 0;
+      selEl.addEventListener('click',()=>{
+        //when markers hidden this show the current marker
+        marker.setMap(map);
+        litleInfo.close();
+        info.open(map,marker);
+        console.log(selEl.id);
+          if(this.id === selEl.id){
+            selEl.classList.add('selected');
+          }
+        }
+      );
+      // map/selEl listeners to close info window
+      map.addListener('click',() => {
         info.close();
         selEl.classList.remove('selected');
       });
+
+      selEl.addEventListener('mouseleave', ()=>{
+        info.close();
+        selEl.classList.remove('selected');
+        // console.log(this.markArr);
+      });
+
    }
    
    showDetails(){
@@ -178,7 +174,14 @@ let ristoArray =[];
 let markArray =[];
 let reqArr=[];//array requests for details
 let userPos;
-let marksOnOff = false;
+let marksOnOff = true;
+let divList = document.getElementById('list-container');
+let sortEl = document.getElementById('ratingSel');
+let btnMarks = document.getElementById('btnMarks');
+let sortVal;
+let morebtn = document.getElementById('more');
+let getMore;
+
 
 (navigator.geolocation)?navigator.geolocation.getCurrentPosition(initMap, errorMessage):alert("Your browser does not support Geolocation.");
 
@@ -211,15 +214,12 @@ function errorMessage() {
 
     let latlng = new google.maps.LatLng(userPos);
     let mapOptions = {
-      zoom: 15,
+      zoom: 13,
       center: latlng,
       backgroundColor: '#0a0808',
       disableDefaultUI: true,
-      zoomControl: true,
-      gestureHandling: 'cooperative',
-      zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_BOTTOM
-      },
+      disableDoubleClickZoom: true,
+      gestureHandling: 'greedy',
       styles:[
         
           {'elementType': 'geometry', 'stylers': [{color: '#00272B'}]},
@@ -261,19 +261,51 @@ function errorMessage() {
 
    // places servicePlace
    service = new google.maps.places.PlacesService(map);
+   // Object request to pass on nearbySearch of service
    let nearbyReq = {
       location: latlng,
-      radius: '2000',
+      radius: 3500,
       type: ['restaurant'],
       rankBy: google.maps.places.RankBy.PROMINENCE
    }
-   //So, we search for restaurants near by user position and pass it on toRestaurants() function to create restaurant objects from the response of service
+   // sort listener recalls the searchNear fn, thus refresh the search with rating value
+  console.log(sortEl);
+  sortEl.addEventListener('change',searchNear);
+  btnMarks.addEventListener('click',btnMarkers);
+  function btnMarkers(){
+    console.log(markArray);
+    
+    (marksOnOff)?markArray.map(item => item.setMap(null)):markArray.map(item => item.setMap(map));
+    // markArray=[];
+    marksOnOff = !marksOnOff;
+    // searchNear();
+  }
 
-   service.nearbySearch(nearbyReq,fromNearby);
+   function searchNear(){
+    sortVal = Number(sortEl.value);
+    console.log(sortVal);
+    markArray.map(item => item.setMap(null));
+    markArray =[];
+    divList.innerHTML= '';
+    service.nearbySearch(nearbyReq,fromNearby);
+  }
+  // ^- service.nearbySearch(nearbyReq,fromNearby);
+  searchNear();
    console.log(reqArr);
+   // more results button listener
+   morebtn.addEventListener('click',()=>{
+     morebtn.disabled = true;
+     (getMore)?getMore():'';
+   });
+
+  //This append the info legend on map
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push
+(document.getElementById('legend'));
+
 }//End of main function
 
   //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
+  
 
 
 // TODO functions improvements
@@ -281,11 +313,18 @@ function errorMessage() {
     if(status === 'OK'){let response = results;
       //implement the sort on response
       //TODO> Filter functions
-      response.filter((a)=> a.rating >2 && a.rating <= 5 )
-      //Sorting response objects
-      .sort((a,b)=> a.rating-b.rating)
+      console.log(sortVal);
+      morebtn.disabled = !pagination.hasNextPage;
+      getMore = pagination.hasNextPage && function(){
+        pagination.nextPage();
+      };
+      console.log(getMore);
+
+      response.filter((a)=> a.rating >= sortVal);
+      // //Sorting response objects
+      response.sort((a,b)=> a.rating-b.rating);
       //concatenate array.map method
-      .map(res => {
+      response.map(res => {
         // console.log(res);
         //request object literal to be passed on getDetails service
         let req = {
@@ -293,7 +332,9 @@ function errorMessage() {
         };
         service.getDetails(req,toRestaurants);
         reqArr.push(req);
-      }); 
+      });
+      
+      
     return reqArr;
     }
   }
@@ -306,13 +347,6 @@ function errorMessage() {
     }
   }
 
-  async function btnMarkers(){
-    console.log('OOPS');
-    console.log(markArray);
-    (marksOnOff)?markArray.map(item => item.setMap(null)):markArray.map(item => item.setMap(map));
-    marksOnOff = !marksOnOff;
-  }
-
 
   // allMarkers = false;
   //Convert place details results into Restaurant Objects
@@ -322,13 +356,12 @@ function errorMessage() {
       // console.log(place);
       //create Object
       let newRisto =  new Restaurant(thePlace,markArray);
+      // ristoArray.push(newRisto);
+      // console.log(ristoArray);
+      // ristoArray.filter((a)=> a.stars===sortVal)
+      // .sort((a,b)=>a.stars-b.stars);
       newRisto.ristoItem();
       newRisto.ristoMark(marksOnOff);
-      btnMarkers();
-      
-      // ristoArray.push(newRisto);
-      // deployMarkers(marksOnOff,newRisto);
-      // newRisto.ristoMark(true);
 
     }
       return ristoArray;

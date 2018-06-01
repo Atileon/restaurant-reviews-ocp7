@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
@@ -8,15 +9,42 @@
    <title>Review Restaurants P7</title>
 </head>
 <body>
-   <div id="main-container">
-         <div id="inputBtn">
-                  <button onclick="btnMarkers()">Toggle Marks</button>
-         </div>
-      <div id="map"></div>
-      <div id="list-container">
-            <!-- Here the content -->
+      <div id="main-container">
+            <div id="inputBtn">
+                  
+            </div>
+
+            <div id="map"></div>
+
+            <div id="right-container">
+                  <div class="ui-buttons">
+                        <button id="btnMarks" >Toggle Marks</button>
+                        <button class="btn">ASC</button>
+                        <button class="btn">DESC</button>
+                        <button id="more">More Results</button>
+                  </div>
+                  <form>
+                        <select id="ratingSel" name="ratingSel">
+                              <option value='6' >All</option>
+                              <option value='3' >3 Stars</option>
+                              <option value='4' >4 Stars</option>
+                              <option value='5' >5 Stars</option>
+                        </select>
+                  </form>
+                  <div id="list-container"></div>
+                  <!-- Here the content -->
+            </div>
+      <!-- The Legend Box -->
+            <div id="legend">
+                  <h3>Legend</h3>
+                  <ul>
+                        <li>Double Click to zoom</li>
+                        <li>text</li>
+                        <li>text</li>
+                        <li>text</li>
+                  </ul>
+            </div>
       </div>
-   </div>
      
 
 
