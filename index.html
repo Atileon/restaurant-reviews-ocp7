@@ -5,63 +5,68 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <!-- css -->
+   <link href="https://fonts.googleapis.com/css?family=Merienda+One|Quattrocento+Sans:400i" rel="stylesheet">
+
    <link rel="stylesheet" href="./css/main.css">
    <title>Review Restaurants P7</title>
 </head>
 <body>
-      <div id="main-container">
-            <div id="inputBtn">
-                  
-            </div>
-
-            <div id="map"></div>
-
-            <div id="right-container">
-                  <div id="ui-buttons">
-                        <button id="btnMarks" class="mark-on" >Marks ON</button>
-                  </div>
-                  <form id="ui-sort">
-                        <div id="sort-elements">
-                              <label for="ratingSel">Sort by: </label>
-                              <select id="ratingSel" name="ratingSel">
-                                    <option value='6' >All</option>
-                                    <option value='3' >3 Stars</option>
-                                    <option value='4' >4 Stars</option>
-                                    <option value='5' >5 Stars</option>
-                              </select>
-                        </div>
-                        
-                        <button class="btn asc">ASC</button>
-                        <button class="btn desc">DESC</button>
-                  </form>
-                  <div id="more-container">
-                        
-                        <button name='more' id="more">More Results</button>
-                  </div>
-                  <div id="list-container">
-                        
-                  </div>
-                  
-                  
-                  <!-- Here the content -->
-            </div>
-      <!-- The Legend Box -->
-            <div id="legend">
-                  <h3>Legend</h3>
-                  <ul>
-                        <li>Double Click to zoom</li>
-                        <li>text</li>
-                        <li>text</li>
-                        <li>text</li>
-                  </ul>
-            </div>
+   <div id="main-container">
+      <div id="inputBtn">
+            
       </div>
-     
 
+      <div id="map"></div>
 
+      <div id="right-container">
+            <div id="ui-buttons">
+               <button id="btnMarks" class="mark-on" >Marks ON</button>
+         
+               <!-- form element -->
+               <form id="ui-sort">
+                  <div id="sort-elements">
+                     <label for="ratingSel">Sort by: </label>
+                     <select id="ratingSel" name="ratingSel">
+                        <option value='6' >All</option>
+                        <option value='3' >3 Stars</option>
+                        <option value='4' >4 Stars</option>
+                        <option value='5' >5 Stars</option>
+                     </select>
+                  </div>
+                  
+                  <button class="btn asc">ASC</button>
+                  <button class="btn desc">DESC</button>
+               </form>
+               <!-- More button -->
+               <div id="more-container">
+                  <button name='more' id="more">More Results</button>
+               </div>
+            </div>
+            <!-- List container -->
+            <div id="list-container">
+                  
+            </div>
+            <!-- Reviews container -->
+            <div id="reviews">
 
-   
-   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&v3.31&libraries=places"></script>
+            </div>
+            
+            
+            <!-- Here the content -->
+      </div>
+   <!-- The Legend Box -->
+      <div id="legend">
+         <h3>Legend</h3>
+         <ul>
+            <li>Double Click to zoom</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+         </ul>
+      </div>
+   </div>
+
+   <script src="https://maps.googleapis.com/maps/api/js?key=&v3.31&libraries=places"></script>
 
    <script src="./js/avaMap.js"></script>
    

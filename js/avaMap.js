@@ -15,6 +15,7 @@ class Restaurant {
       //wouldn't be created and throw an Error on console 
       //because of undefined value
       this.ristObj = ristObject;
+      this.reviews = this.ristObj.reviews;
       this.photos = this.ristObj.photos;
       this.photo= (!this.photos)?'':this.ristObj.photos[0].getUrl({maxWidth:200,maxHeight:200});
       this.name = this.ristObj.name;
@@ -112,6 +113,9 @@ class Restaurant {
         }
       });
       selEl.addEventListener('click',()=>{
+        let reviews = document.getElementById('reviews');
+          reviews.innerHTML = '' ;
+        console.log(this.showReviews());
         //when markers hidden this show the current marker
         marker.setMap(map);
         litleInfo.close();
@@ -134,6 +138,67 @@ class Restaurant {
         // console.log(this.markArr);
       });
 
+   }
+   showReviews(){
+    let reviews = this.reviews;
+    console.log(reviews);
+    let revDiv = document.getElementById('reviews');
+    let titleDiv = document.createElement('h3');
+        titleDiv.classList.add('rev-title');
+        titleDiv.textContent = `"${this.name}" reviews:`;
+        revDiv.appendChild(titleDiv);
+
+    reviews.map( (rev, i) => {
+      let author = rev.author_name;
+      let authPhoto = rev.profile_photo_url;
+      let rating = rev.rating;
+      let revDate = rev.relative_time_description;
+      let revBody = rev.text;
+      console.log(`the author was ${author} with a rate of ${rating} on date ${revDate} saying that ${revBody}`);
+    
+      let revContainer = document.createElement('div');
+        revContainer.classList.add('rev-container',`rev-${i}`);
+
+      //Create 2 divs to separate the author photo and the content
+      let leftDiv = document.createElement('div',);
+        leftDiv.classList.add('left-div');
+      let rightDiv = document.createElement('div');
+        rightDiv.classList.add('right-div');
+      //Create img element (Left)
+      let authImg = document.createElement('img');
+        authImg.classList.add('auth-img');
+        authImg.src = authPhoto;
+      //Author name (Left)
+      let authName = document.createElement('p');
+        authName.classList.add('auth-name');
+        authName.textContent = author;
+      //Author Rate (Left)
+      let authRate = document.createElement('p');
+        authRate.classList.add('auth-rate');
+        authRate.textContent = `Rated this place: ${rating} \u2606`;
+      //Date review (Right)
+      let authDate = document.createElement('p');
+        authDate.classList.add('rev-date');
+        authDate.textContent = revDate;
+      //Review body (Right)
+      let txtBody = document.createElement('p');
+        txtBody.classList.add('rev-body');
+        txtBody.textContent = revBody;
+      //Appending elements
+      //left div
+      leftDiv.appendChild(authImg);
+      leftDiv.appendChild(authName);
+      leftDiv.appendChild(authRate);
+      //right div
+      rightDiv.appendChild(authDate);
+      rightDiv.appendChild(txtBody);
+      //left and right on review container
+      revContainer.appendChild(leftDiv);
+      revContainer.appendChild(rightDiv);
+      //Thus, the review into the reviews container
+      revDiv.appendChild(revContainer);
+    });
+    
    }
    
    showDetails(){
@@ -173,12 +238,13 @@ let search;
 let ristoArray =[];
 let markArray =[];
 let reqArr=[];//array requests for details
+let revArr =[];
 let userPos;
 let marksOnOff = true;
 let divList = document.getElementById('list-container');
 let sortEl = document.getElementById('ratingSel');
 let btnMarks = document.getElementById('btnMarks');
-let sortVal;
+let sortVal = 0;
 let morebtn = document.getElementById('more');
 let getMore;
 
@@ -220,32 +286,328 @@ function errorMessage() {
       disableDefaultUI: true,
       disableDoubleClickZoom: true,
       gestureHandling: 'greedy',
-      styles:[
-        
-          {'elementType': 'geometry', 'stylers': [{color: '#00272B'}]},
-          {'elementType': 'labels.text.stroke', 'stylers': [{color: '#000000'}]},
-          {'elementType': 'labels.text.fill', 'stylers': [{color: '#ffffff'}]},
-          {
-            'featureType': 'poi',
-            'elementType': 'all',
-            'stylers': [{'visibility':'off'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{color: '#FF6663'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'geometry.stroke',
-            stylers: [{color: '#000000'}]
-          },
-          {
-            featureType: 'road',
-            elementType: 'labels.text.fill',
-            stylers: [{color: '#ffffff'}]
-          },
-      ]
+      styles:[//style of map
+        {
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#212121"
+            }
+          ]
+        },
+        {
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#757575"
+            }
+          ]
+        },
+        {
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            {
+              "color": "#212121"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#400000"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            {
+              "color": "#000000"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.land_parcel",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.locality",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#bdbdbd"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.province",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.man_made",
+          "stylers": [
+            {
+              "color": "#ff8000"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.man_made",
+          "elementType": "labels",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            },
+            {
+              "saturation": -15
+            },
+            {
+              "lightness": -35
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural.landcover",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#400000"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural.landcover",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            },
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural.terrain",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#800000"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "landscape.natural.terrain",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#757575"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#008000"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            {
+              "color": "#000000"
+            }
+          ]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry.fill",
+          "stylers": [
+            {
+              "color": "#2c2c2c"
+            }
+          ]
+        },
+        {
+          "featureType": "road",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#8a8a8a"
+            }
+          ]
+        },
+        {
+          "featureType": "road.arterial",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#a84726"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "road.arterial",
+          "elementType": "geometry.stroke",
+          "stylers": [
+            {
+              "color": "#000000"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "road.arterial",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#cdcdcd"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "featureType": "road.local",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "road.local",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#7d7d7d"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "road.local",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#ffffff"
+            },
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#000000"
+            }
+          ]
+        }
+      ]//end style of map
     }
    // lets create the map
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -313,7 +675,11 @@ function errorMessage() {
 
 // TODO functions improvements
   function fromNearby(results,status,pagination){
-    if(status === 'OK'){let response = results;
+    
+    
+    if(status === 'OK'){
+      
+      let response = results;
       //implement the sort on response
       //TODO> Filter functions
       console.log(sortVal);
@@ -323,10 +689,9 @@ function errorMessage() {
         pagination.nextPage();
       };
       // console.log(getMore);
-
-      response.filter((a)=> a.rating >= sortVal);
+      response.filter((a)=> a.rating >= sortVal && a.rating <= (sortVal + 1));
       // //Sorting response objects
-      response.sort((a,b)=> a.rating-b.rating);
+      response.sort((a,b)=> b.rating-a.rating);
       //concatenate array.map method
       response.map(res => {
         // console.log(res);
@@ -337,7 +702,6 @@ function errorMessage() {
         service.getDetails(req,toRestaurants);
         reqArr.push(req);
       });
-      
       
     return reqArr;
     }
