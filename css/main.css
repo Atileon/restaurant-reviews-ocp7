@@ -36,8 +36,7 @@ font-family: 'Merienda One', cursive;
     width: 30%;
     height: 100%;
     overflow: hidden;
-    border-left: 1px solid #c9b034bd;
-    box-shadow: -3px 0px 200px #c9b034;
+    box-shadow: -3px 0px 200px #e64133;
 }
 #list-container{
     flex: 1;
@@ -104,16 +103,46 @@ font-family: 'Merienda One', cursive;
 
 }
 /* =================== REVIEWS ========== */
+#reviews::-webkit-scrollbar {
+    width: .5em;
+    background: #4b1212;
+}
+#reviews::-webkit-scrollbar-thumb{
+    background: #917a2e;
+}
 #reviews{
     position: relative;
     flex: 1;
     width: 100%; 
-    background: rgb(247, 241, 241);
+    background: #212121;
     border-top: 1px solid #c9b034;
     overflow-y: scroll;
 }
+#reviews .placeholder-img{
+    background: url('../img/fork.png') no-repeat;
+    background-position: center;  
+    background-size: contain;
+    color: #950606;
+    position: relative;
+    top: 30%;
+    padding: 3em;
+    margin: 0 auto;
+    
+
+
+}
+.placeholder-img>p{
+    font-family: 'Quattrocento Sans', sans-serif;
+    text-shadow: 2px 2px 7px #000;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2em;
+
+}
 #reviews h3{
-    position: fixed;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
     width: 100%;
     background: #212121;
     color: #ae9f47;
@@ -139,6 +168,13 @@ font-family: 'Merienda One', cursive;
 }
 .right-div{
     flex: 2;
+}
+.rev-title{
+    font-family: 'Merienda One', cursive;
+    font-size: 1.3em;
+    letter-spacing: 1px;
+    text-align: center;
+    box-shadow: 0px 1px 11px #000;
 }
 .auth-name{
     font-family: 'Merienda One', cursive;
@@ -168,6 +204,15 @@ font-family: 'Merienda One', cursive;
     font-size: 1em;
 }
 /* ============== Show Details POPUP ============ */
+
+/* .gm-style-iw {
+   top: 10 !important;
+   left: 10 !important;
+   background-color: #fff;
+   box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6);
+   border: 1px solid rgba(72, 181, 233, 0.6);
+   border-radius: 2px 2px 0 0;
+ } */
 .cont-detail{
    width: 100%;
     min-height: 100px;

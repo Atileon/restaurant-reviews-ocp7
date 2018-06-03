@@ -82,14 +82,21 @@ class Restaurant {
       };
       let info = new google.maps.InfoWindow(content);
       let litleInfo = new google.maps.InfoWindow(litleContent);
+      let markImg = {
+        url:'./img/mark46x64.png',
+        size: new google.maps.Size(46, 64),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(0,64)
+      };
       let markOpt = {
          map: map,
-         icon: this.icon,
+         icon: markImg,
          opacity: 0.8,
          position: pos,
          animation: google.maps.Animation.DROP,
          title: this.name
       };
+      let reviews = document.getElementById('reviews');
       let selEl = document.getElementById(this.id);
       let marker = new google.maps.Marker(markOpt);
       this.markArr.push(marker);
@@ -104,6 +111,8 @@ class Restaurant {
       });
       // marker/selEl listeners to open info window
       marker.addListener('click',()=> {
+        reviews.innerHTML = '' ;
+        this.showReviews();
         litleInfo.close();
         info.open(map,marker);
         console.log(selEl.id);
@@ -113,9 +122,9 @@ class Restaurant {
         }
       });
       selEl.addEventListener('click',()=>{
-        let reviews = document.getElementById('reviews');
-          reviews.innerHTML = '' ;
-        console.log(this.showReviews());
+        reviews.innerHTML = '' ;
+        this.showReviews();
+        // console.log(this.showReviews());
         //when markers hidden this show the current marker
         marker.setMap(map);
         litleInfo.close();
@@ -612,12 +621,19 @@ function errorMessage() {
    // lets create the map
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
    // User marker
+   let userIcon={
+      url:'./img/hungry50.png',
+      size: new google.maps.Size(64, 64),
+      origin: new google.maps.Point(0,0),
+      anchor: new google.maps.Point(0,64)
+   }
    let markOpt = {
       map: map,
-      opacity: 0.7,
+      icon: userIcon,
+      opacity: 1,
       position: userPos,
       animation: google.maps.Animation.BOUNCE,
-      title: 'You are here!'
+      title: 'You are here! hungry!!'
    }
    let marker = new google.maps.Marker(markOpt);
 
@@ -691,7 +707,8 @@ function errorMessage() {
       // console.log(getMore);
       response.filter((a)=> a.rating >= sortVal && a.rating <= (sortVal + 1));
       // //Sorting response objects
-      response.sort((a,b)=> b.rating-a.rating);
+      response.sort((a,b)=> {
+        return (a.rating>b.rating)?1: -1;});
       //concatenate array.map method
       response.map(res => {
         // console.log(res);
