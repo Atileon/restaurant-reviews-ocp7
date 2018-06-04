@@ -794,7 +794,10 @@ function errorMessage() {
   console.log(ristoArray);
 // ============================================
 
-
+let errTitle = document.querySelector('.gm-err-title');
+errTitle.textContent='The AvA Review Restaurants';
+let errMess = document.querySelector('.gm-err-message');
+errMess.textContent = 'If the map aren\'t Loading maybe you are not on earth or maybe you are not so hungry because you are reading this message, however I\'m eating a big Hamburger and Beer ;)';
 
 
 

@@ -3,6 +3,18 @@
 	padding:0;
 	box-sizing:border-box;
 }
+
+/* ============ ERROR MSG GOOGLE ============ */
+
+.gm-err-container{
+    background: #212121;
+}
+.gm-err-message::before{
+    content: 'If the map aren\'t Loading maybe you are not on earth or maybe you are not so hungry because you are reading this message, however I\'m eating a big Hamburger and Beer ;) and now the right error message from GoogleApi: ';
+    font-size: 1.6em;
+}
+
+/* ========================================= */
 #main-container{
    display: flex;
    align-content: center;
@@ -10,7 +22,7 @@
    height: 100vh;
    /* height: 800px; */
    margin: 0 auto;
-   background: darkslategrey;
+   background: #212121;
 }
 /* ============== Font Families ========= 
 font-family: 'Quattrocento Sans', sans-serif;
@@ -319,6 +331,7 @@ font-family: 'Merienda One', cursive;
 }
 #legend {
     position: absolute;
+    visibility: hidden;
     left: 3em;
     bottom: 3em;
     font-family: Arial, sans-serif;
@@ -360,6 +373,7 @@ button:focus , select:focus{
 }
 #ui-sort{
     display: flex;
+    flex: 1;
 }
 #ui-sort *{
     flex: 1;
