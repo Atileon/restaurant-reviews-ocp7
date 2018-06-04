@@ -102,6 +102,11 @@ font-family: 'Merienda One', cursive;
    background:rgb(78, 57, 18);
 
 }
+/* =========== SORT LIST BUTTONS ========= */
+
+.on{
+    background: green !important;
+}
 /* =================== REVIEWS ========== */
 #reviews::-webkit-scrollbar {
     width: .5em;

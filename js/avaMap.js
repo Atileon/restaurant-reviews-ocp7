@@ -40,6 +40,7 @@ class Restaurant {
       let itemEl = document.createElement('div');
       itemEl.id = this.id;
       itemEl.className = this.itemClass;
+      itemEl.dataset.rating = this.stars;
       // The restaurant's name element
       let nameEl = document.createElement('p');
       nameEl.className = this.nameClass;
@@ -254,6 +255,10 @@ let divList = document.getElementById('list-container');
 let sortEl = document.getElementById('ratingSel');
 let btnMarks = document.getElementById('btnMarks');
 let sortVal = 0;
+let btnAsc = document.getElementById('ASC');
+let btnDesc = document.getElementById('DESC');
+let ASC = true;
+let DESC = false;
 let morebtn = document.getElementById('more');
 let getMore;
 
@@ -649,6 +654,14 @@ function errorMessage() {
    // sort listener recalls the searchNear fn, thus refresh the search with rating value
   console.log(sortEl);
   sortEl.addEventListener('change',searchNear);
+  btnAsc.addEventListener('click',(e)=>{
+    e.preventDefault();
+    ASC=!ASC;
+    (ASC)?btnAsc.textContent = 'ASC \u2191': btnAsc.textContent = 'DESC \u2193';
+    (ASC)?btnAsc.classList.add('on'):btnAsc.classList.remove('on');
+    sortDamn();
+    
+  });
   btnMarks.addEventListener('click',btnMarkers);
   function btnMarkers(){
     // console.log(markArray);
@@ -677,12 +690,35 @@ function errorMessage() {
    morebtn.addEventListener('click',()=>{
      morebtn.disabled = true;
      (getMore)?getMore():'';
+     sortDamn();
    });
 
   //This append the info legend on map
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push
 (document.getElementById('legend'));
 
+
+   function sortDamn(){
+    
+    let elementsDOM = document.getElementsByClassName('risto-item');
+    let arrDOM = Array.from(elementsDOM);
+    console.log(arrDOM);
+    console.log(elementsDOM);
+    divList.innerHTML='';
+    arrDOM.sort(compare);
+    // arrDOM.filter();
+    arrDOM.map(item => divList.appendChild(item));
+   }
+   
+   function compare(a, b) {
+     console.log(ASC);
+     console.log(DESC);
+     if(!ASC){
+       return b.dataset.rating - a.dataset.rating;
+     }
+     return a.dataset.rating - b.dataset.rating;
+  }
+  sortDamn();
 }//End of main function
 
   //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
@@ -705,32 +741,36 @@ function errorMessage() {
         pagination.nextPage();
       };
       // console.log(getMore);
-      response.filter((a)=> a.rating >= sortVal && a.rating <= (sortVal + 1));
-      // //Sorting response objects
-      response.sort((a,b)=> {
-        return (a.rating>b.rating)?1: -1;});
-      //concatenate array.map method
-      response.map(res => {
+      // // response.filter((a)=> a.rating > sortVal );
+      // response.sort((a,b)=> a.rating-b.rating);
+      response.map((res, key) => {
+       
         // console.log(res);
+        // console.log(key);
         //request object literal to be passed on getDetails service
-        let req = {
-          placeId: res.place_id
-        };
-        service.getDetails(req,toRestaurants);
-        reqArr.push(req);
+        if(res.rating <=sortVal){
+          
+          let req = {
+            placeId: res.place_id
+          };
+          service.getDetails(req,toRestaurants);
+          reqArr.push(req);
+        }
+        
+        
       });
       
     return reqArr;
     }
   }
   console.log(reqArr);
-  async function deployMarkers(val,obj){
-    if(val === true){
-      return obj.ristoMark(true);
-    }else{
-      return obj.ristoMark(false);
-    }
-  }
+  // async function deployMarkers(val,obj){
+  //   if(val === true){
+  //     return obj.ristoMark(true);
+  //   }else{
+  //     return obj.ristoMark(false);
+  //   }
+  // }
 
 
   // allMarkers = false;
@@ -751,7 +791,7 @@ function errorMessage() {
     }
       return ristoArray;
   }
-  console.log(markArray)
+  console.log(ristoArray);
 // ============================================
 
 
