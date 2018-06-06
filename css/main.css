@@ -1,7 +1,7 @@
 *{
-	margin:0;
-	padding:0;
-	box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 /* ============ ERROR MSG GOOGLE ============ */
@@ -30,7 +30,7 @@ font-family: 'Merienda One', cursive;
 ======================================== */
 /* ============= Map Style ==============*/
 #map{
-   width: 70%;
+   flex: 2;
    min-height: 600px;
 }
 /* ================= LIST STYLE ================= */
@@ -43,6 +43,7 @@ font-family: 'Merienda One', cursive;
 }
 #right-container{
     display: flex;
+    flex: 1;
     flex-direction: column;
     z-index: 100;
     width: 30%;
@@ -88,7 +89,7 @@ font-family: 'Merienda One', cursive;
    font-size: 1.3em;
    flex-basis: 70%;
    padding-top: .5em;
-	/* background: orange; */
+    /* background: orange; */
 }
 
 .risto-address{
@@ -242,7 +243,7 @@ font-family: 'Merienda One', cursive;
    font-size: 2em;
 }
 .details{
-	display:flex;	
+    display:flex;	
 }
 .photo{
    flex: 40%;
@@ -331,15 +332,14 @@ font-family: 'Merienda One', cursive;
 }
 #legend {
     position: absolute;
-    visibility: hidden;
-    left: 3em;
-    bottom: 3em;
-    font-family: Arial, sans-serif;
+    bottom: 0;
+    right: 0;
     background: #fff;
-    padding: 10px;
-    margin: 10px;
-    border: 3px solid #000;
-
+    padding: 15px;
+    height: 90px;
+    border: 1px solid red;
+    background: #212121;
+    color: white;
   }
 
 /* ==============  UI   ================ */
@@ -434,4 +434,60 @@ button:focus , select:focus{
     color: #917a2e;
     box-shadow: none;
     border-bottom: 2px solid #460202;
+}
+
+/* ==============THE FORM================= */
+
+#toggleForm{
+    padding: 1em;
+    background: #212121;
+    border: 1px solid red;
+    color: red;
+    width: 100%;
+}
+#formContainer{
+    width: 300px;
+    position: absolute;
+    z-index: 900;
+    bottom: 0;
+    left: 0;
+    
+}
+#theForm{
+    visibility: hidden;
+    display: flex;
+    opacity: 0;
+    transform: translateX(-777px);
+    flex-direction: column;
+    width: 100%;
+    margin: 0 auto;
+    transition: all 1s ease-in-out;
+    padding: 1em;
+    background: #212121;
+    border: 1px solid red;
+    border-radius: 25px 25px 0 0;
+}
+#theForm input, #theForm textarea{
+    padding: .5em;
+    width: 90%;
+    margin: .3em auto;
+    border: .5px solid orange;
+    border-radius: 5px;
+    /* resize: none; */
+}
+
+#theForm.showIT{
+    visibility: visible;
+    transform: translateX(0);
+    opacity: 1 ;
+}
+#sendIt{
+    width: 100%;
+    background: orange;
+    border: 1px solid #212121;
+    color: white;
+    padding: 1em;
+}
+#sendIt:disabled{
+    background: #950606;
 }

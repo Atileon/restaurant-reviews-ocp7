@@ -280,7 +280,7 @@ function errorMessage() {
   //  infowindow = new google.maps.InfoWindow({
   //    content: 'Content string to show'
   //  });
-  //  geoCoder = new google.maps.Geocoder();
+   geoCoder = new google.maps.Geocoder();
    //  Testing the search results into a input text
    // let inputSearch;
    // inputSearch = document.getElementById('searchPlace');
@@ -694,12 +694,11 @@ function errorMessage() {
    });
 
   //This append the info legend on map
-  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push
 (document.getElementById('legend'));
 
 
    function sortDamn(){
-    
     let elementsDOM = document.getElementsByClassName('risto-item');
     let arrDOM = Array.from(elementsDOM);
     console.log(arrDOM);
@@ -711,18 +710,66 @@ function errorMessage() {
    }
    
    function compare(a, b) {
-     console.log(ASC);
-     console.log(DESC);
+    //  console.log(ASC);
+    //  console.log(DESC);
      if(!ASC){
        return b.dataset.rating - a.dataset.rating;
      }
      return a.dataset.rating - b.dataset.rating;
   }
   sortDamn();
+
+  // ====GEOCODER===
+
+  map.addListener('dblclick',(e)=>{
+    console.log(e);
+    toggleForm();
+    let coords ={
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng()
+    }
+    let latlng = new google.maps.LatLng(coords);
+    console.log(coords);
+    geoCoder.geocode({location:latlng},fromGeocode);
+  });
+
+
+
 }//End of main function
 
-  //The following function aims to retrieve restaurants near to user location and pass one by one to get info and markers
+  //From geocode service
+  function fromGeocode(results,status){
+    if(status === 'OK'){
+      let response = results;
+      console.log(response);
+    //   let objNewRest={
+    //     "id":101,
+    //     "reviews": [
+    //        {
+    //           "author_name":"Helen Bree",
+    //           "profile_photo_url" : "./img/rev-1.jpg",
+    //           "rating": 5,
+    //           "relative_time_description" : "2 weeks ago",
+    //           "text" : "It was a very great experience"
   
+    //        }
+    //     ],
+    //     "photos":[
+    //        {"getUrl()":"return ('./img/revs/img.jpg')"}
+    //     ],
+    //     "name":"La Marziana",
+    //     "vicinity":"lala street, 10, Neverland",
+    //     "rating": 5,
+    //     "opening_hours": {
+    //        "open_now": true
+    //     },
+    //     "url":"#",
+    //     "international_phone_number":"+39035123456",
+    //     "website":"#"
+     
+    //  }
+    }
+  }
 
 
 // TODO functions improvements
@@ -778,7 +825,7 @@ function errorMessage() {
   function toRestaurants(place,status){
     if(status=== 'OK') {
       let thePlace =  place;
-      // console.log(place);
+      console.log(place);
       //create Object
       let newRisto =  new Restaurant(thePlace,markArray);
       // ristoArray.push(newRisto);
@@ -794,28 +841,62 @@ function errorMessage() {
   console.log(ristoArray);
 // ============================================
 
-let errTitle = document.querySelector('.gm-err-title');
-errTitle.textContent='The AvA Review Restaurants';
-let errMess = document.querySelector('.gm-err-message');
-errMess.textContent = 'If the map aren\'t Loading maybe you are not on earth or maybe you are not so hungry because you are reading this message, however I\'m eating a big Hamburger and Beer ;)';
 
+let formIt = document.getElementById('theForm');
+let sendIt = document.getElementById('sendIt');
+let closeIt = document.getElementById('closeIt');
+let openF = document.getElementById('toggleForm');
+//open form: boolean
+let open =false;
+openF.onclick = toggleForm;
 
+let btnONOFF = false;
 
-  // function codeAddress() {
-  //   let address = document.getElementById('address').value;
-  //   console.log(address);
-  //   geocoder.geocode( { 'address': address}, function(results, status) {
-  //     if (status == 'OK') {
-  //        let response = results[0].geometry.location;
-  //        map.panTo(response);
-  //        // map.setCenter(results[0].geometry.location);
-  //       let marker = new google.maps.Marker({
-  //           map: map,
-  //           position: response
-  //       });
-  //     } else {
-  //       alert('Geocode was not successful for the following reason: ' + status);
-  //     }
-  //   });
-      
-  //  }
+let t1 = document.getElementById('t1');
+let t2 = document.getElementById('t2');
+let t3 = document.getElementById('t3');
+let t4 = document.getElementById('t4');
+let t5 = document.getElementById('t5');
+//event handlers and callbacks
+t1.onkeyup = vala;
+t2.onkeyup = vala;
+t3.onkeyup = vala;
+t4.onkeyup = vala;
+t5.onkeyup = vala;
+//button submit event handler
+sendIt.onclick = fromSubmit;
+let inputsVals= document.querySelectorAll('#theForm input, #theForm textarea');
+//toggle on off the Form
+function toggleForm(){
+   open= !open;
+   sendIt.disabled=true;
+   console.log(open);
+   (open)? formIt.classList.add('showIT'):formIt.classList.remove('showIT');
+   (open)? openF.textContent='  CANCEL   ':openF.textContent='Add Restaurant'
+   formIt.reset();
+
+}
+//Form validation function
+function vala(e){
+   console.log(e.target.value.length);
+      (t1.value.length ===0)?btnONOFF=false:btnONOFF=true;
+      (t2.value.length ===0)?btnONOFF=false:btnONOFF=true;
+      (t3.value.length ===0)?btnONOFF=false:btnONOFF=true;
+      (t4.value.length ===0)?btnONOFF=false:btnONOFF=true;
+      (t5.value.length ===0)?btnONOFF=false:btnONOFF=true;
+   console.log(btnONOFF);
+      (btnONOFF)?sendIt.disabled=false:sendIt.disabled=true;
+}
+//from submit form function
+function fromSubmit(e){
+      e.preventDefault();
+      let objOne={
+            name:t1.value,
+            test: t2.value
+         }
+         localStorage.setItem('objectOne',JSON.stringify(objOne));
+         let see = JSON.parse(localStorage.getItem('objectOne'));
+         console.log(see);
+         formIt.reset();
+         sendIt.disabled=true;
+}

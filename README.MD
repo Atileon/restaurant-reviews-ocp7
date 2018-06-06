@@ -1,7 +1,10 @@
 ## Project 7 at OC based on Pure Javascript and API requests
 
-....
-in progress
+---
+---
+If are you hungry and want to see where's the restaurants near by your position just follow the link below...
+
+## This project is : in progress
 
 ### To try it:
 
