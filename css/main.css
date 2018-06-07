@@ -194,6 +194,10 @@ font-family: 'Merienda One', cursive;
     text-align: center;
     box-shadow: 0px 1px 11px #000;
 }
+/* .auth-img{
+    width: 100%;
+    border-radius: 50%;
+} */
 .auth-name{
     font-family: 'Merienda One', cursive;
     text-transform: capitalize;
@@ -467,13 +471,21 @@ button:focus , select:focus{
     border: 1px solid red;
     border-radius: 25px 25px 0 0;
 }
-#theForm input, #theForm textarea{
+#theForm input, #theForm textarea, #theForm select{
     padding: .5em;
     width: 90%;
     margin: .3em auto;
     border: .5px solid orange;
     border-radius: 5px;
     /* resize: none; */
+}
+#theForm label{
+    font-family: 'Quattrocento Sans', sans-serif;
+    color: red;
+    width: 90%;
+    margin: 0 auto;
+    font-size: 1.1em;
+    padding: .3em;
 }
 
 #theForm.showIT{

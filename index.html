@@ -12,18 +12,27 @@
 </head>
 <body>
    <div id="main-container">
-            <div id="formContainer">
-                             
-                              <form id='theForm' action="">
-                                    <input id="t1" type="text"  >
-                                    <input id="t2" type="text" >
-                                    <input id="t3" type="text"  >
-                                    <input id="t4" type="text" >
-                                    <textarea id="t5" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
-                                    <button id="sendIt" disabled>Submit</button>
-                               </form>
-                               <button id="toggleForm">Add Restaurant</button>
-                  </div>
+      <div id="formContainer">
+                        
+         <form id='theForm' action="">
+               <label for="t1">Restaurant name</label>
+               <input id="t1" name="name" type="text"  >
+               <label for="t2">Your Name</label>
+               <input id="t2" name="author" type="text" >
+               <label for="t3">Rating</label>
+               <select id="t3" name="rating">
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+               </select>
+               <label for="t4">Restaurant Phone</label>
+               <input id="t4" name="phone" type="tel" >
+               <label for="t5">Review</label>
+               <textarea id="t5" name="review" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
+               <button id="sendIt" disabled>Submit</button>
+         </form>
+         <button id="toggleForm">Add Restaurant</button>
+      </div>
 
       <div id="map">
             
@@ -79,7 +88,7 @@
       </div>
    </div>
 
-   <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&v3.31&libraries=places"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=API-KEY&v3.31&libraries=places"></script>
 
    <script src="./js/avaMap.js"></script>
    

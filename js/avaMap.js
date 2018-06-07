@@ -17,7 +17,8 @@ class Restaurant {
       this.ristObj = ristObject;
       this.reviews = this.ristObj.reviews;
       this.photos = this.ristObj.photos;
-      this.photo= (!this.photos)?'':this.ristObj.photos[0].getUrl({maxWidth:200,maxHeight:200});
+      this.persPhoto= 'https://loremflickr.com/120/120';
+      this.photo= (!this.photos)?this.persPhoto:this.ristObj.photos[0].getUrl({maxWidth:200,maxHeight:200});
       this.name = this.ristObj.name;
       this.address = this.ristObj.vicinity;
       this.stars = this.ristObj.rating;
@@ -65,7 +66,6 @@ class Restaurant {
    }
    
    ristoMark(bool){
-      let locMarkArr = this.markArr;
       let pos = this.ristObj.geometry.location; 
       let content = this.showDetails();
       let litleInfoOpen = (this.open)?'Open!':'Closed';
@@ -238,7 +238,7 @@ class Restaurant {
    }
 }//end Restaurant class
 
-
+let idNewR=301;
 let map;
 let geoCoder
 let infowindow;
@@ -652,7 +652,7 @@ function errorMessage() {
       rankBy: google.maps.places.RankBy.PROMINENCE
    }
    // sort listener recalls the searchNear fn, thus refresh the search with rating value
-  console.log(sortEl);
+  // console.log(sortEl);
   sortEl.addEventListener('change',searchNear);
   btnAsc.addEventListener('click',(e)=>{
     e.preventDefault();
@@ -728,46 +728,23 @@ function errorMessage() {
       lat: e.latLng.lat(),
       lng: e.latLng.lng()
     }
-    let latlng = new google.maps.LatLng(coords);
-    console.log(coords);
-    geoCoder.geocode({location:latlng},fromGeocode);
+     latlngAdd = new google.maps.LatLng(coords);
+    console.log(latlngAdd);
+    geoCoder.geocode({location:latlngAdd},fromGeocode);
+    return latlngAdd;
   });
 
 
 
 }//End of main function
-
+let latlngAdd;
+console.log(latlngAdd);
   //From geocode service
   function fromGeocode(results,status){
     if(status === 'OK'){
       let response = results;
       console.log(response);
-    //   let objNewRest={
-    //     "id":101,
-    //     "reviews": [
-    //        {
-    //           "author_name":"Helen Bree",
-    //           "profile_photo_url" : "./img/rev-1.jpg",
-    //           "rating": 5,
-    //           "relative_time_description" : "2 weeks ago",
-    //           "text" : "It was a very great experience"
-  
-    //        }
-    //     ],
-    //     "photos":[
-    //        {"getUrl()":"return ('./img/revs/img.jpg')"}
-    //     ],
-    //     "name":"La Marziana",
-    //     "vicinity":"lala street, 10, Neverland",
-    //     "rating": 5,
-    //     "opening_hours": {
-    //        "open_now": true
-    //     },
-    //     "url":"#",
-    //     "international_phone_number":"+39035123456",
-    //     "website":"#"
-     
-    //  }
+   
     }
   }
 
@@ -811,13 +788,6 @@ function errorMessage() {
     }
   }
   console.log(reqArr);
-  // async function deployMarkers(val,obj){
-  //   if(val === true){
-  //     return obj.ristoMark(true);
-  //   }else{
-  //     return obj.ristoMark(false);
-  //   }
-  // }
 
 
   // allMarkers = false;
@@ -825,13 +795,10 @@ function errorMessage() {
   function toRestaurants(place,status){
     if(status=== 'OK') {
       let thePlace =  place;
-      console.log(place);
+      // console.log(place);
       //create Object
       let newRisto =  new Restaurant(thePlace,markArray);
-      // ristoArray.push(newRisto);
-      // console.log(ristoArray);
-      // ristoArray.filter((a)=> a.stars===sortVal)
-      // .sort((a,b)=>a.stars-b.stars);
+      
       newRisto.ristoItem();
       newRisto.ristoMark(marksOnOff);
 
@@ -878,7 +845,7 @@ function toggleForm(){
 }
 //Form validation function
 function vala(e){
-   console.log(e.target.value.length);
+   console.log(e);
       (t1.value.length ===0)?btnONOFF=false:btnONOFF=true;
       (t2.value.length ===0)?btnONOFF=false:btnONOFF=true;
       (t3.value.length ===0)?btnONOFF=false:btnONOFF=true;
@@ -890,13 +857,39 @@ function vala(e){
 //from submit form function
 function fromSubmit(e){
       e.preventDefault();
+      let pos = latlngAdd;
+      idNewR+=1;
       let objOne={
-            name:t1.value,
-            test: t2.value
-         }
+        "id":idNewR,
+        "geometry":{
+          "location":pos,
+        },
+        "reviews": [
+           {
+            "author_name":t2.value,
+            "profile_photo_url":"https://loremflickr.com/200/200",
+            "rating": t3.value,
+            "text": t5.value
+
+           }
+        ],
+        "name":t1.value,
+        "vicinity":t2.value,
+        "rating": t3.value,
+        "opening_hours": {
+           "open_now": true
+        },
+        "url":"#",
+        "international_phone_number":t4.value,
+        "website":"#"
+     
+     }
          localStorage.setItem('objectOne',JSON.stringify(objOne));
          let see = JSON.parse(localStorage.getItem('objectOne'));
          console.log(see);
+         let newRest = new Restaurant(see, markArray);
+         newRest.ristoItem();
+         newRest.ristoMark(marksOnOff);
          formIt.reset();
          sendIt.disabled=true;
 }
