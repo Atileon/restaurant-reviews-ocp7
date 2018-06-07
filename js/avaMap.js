@@ -262,6 +262,8 @@ let DESC = false;
 let morebtn = document.getElementById('more');
 let getMore;
 
+let nearbyReq;
+
 
 (navigator.geolocation)?navigator.geolocation.getCurrentPosition(initMap, errorMessage):alert("Your browser does not support Geolocation.");
 
@@ -291,7 +293,7 @@ function errorMessage() {
    //    let thePlace = search.getPlace();
    //       console.log(thePlace);
    // });
-
+   
     let latlng = new google.maps.LatLng(userPos);
     let mapOptions = {
       zoom: 13,
@@ -642,15 +644,36 @@ function errorMessage() {
    }
    let marker = new google.maps.Marker(markOpt);
 
+
+   
    // places servicePlace
    service = new google.maps.places.PlacesService(map);
    // Object request to pass on nearbySearch of service
-   let nearbyReq = {
-      location: latlng,
-      radius: 3500,
-      type: ['restaurant'],
-      rankBy: google.maps.places.RankBy.PROMINENCE
-   }
+   nearbyReq = {
+        location: latlng,
+        radius: 3500,
+        type: ['restaurant'],
+        rankBy: google.maps.places.RankBy.PROMINENCE
+      }
+
+    map.addListener('dragend',searchOnChange);
+    map.addListener('zoom_changed',searchOnChange);
+    map.addListener('center_changed',searchOnChange);
+    function searchOnChange(){
+      sortVal = Number(sortEl.value);
+      markArray.map(item => item.setMap(null));
+      markArray =[];
+      divList.innerHTML= '';
+      let coordMove = map.getCenter();
+      console.log(coordMove);
+      let moveReq = {
+        location: coordMove,
+        radius: 1500,
+        type: ['restaurant'],
+        rankBy: google.maps.places.RankBy.PROMINENCE
+      }
+      service.nearbySearch(moveReq,fromNearby);
+    }
    // sort listener recalls the searchNear fn, thus refresh the search with rating value
   // console.log(sortEl);
   sortEl.addEventListener('change',searchNear);
@@ -697,7 +720,7 @@ function errorMessage() {
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push
 (document.getElementById('legend'));
 
-
+   //Local function to sort
    function sortDamn(){
     let elementsDOM = document.getElementsByClassName('risto-item');
     let arrDOM = Array.from(elementsDOM);
@@ -731,8 +754,8 @@ function errorMessage() {
      latlngAdd = new google.maps.LatLng(coords);
     console.log(latlngAdd);
     // TODO: GEOCODE COORDS AND ADDRESS IMPLEMENT ON FORM DIRECTLY
-    geoCoder.geocode({location:latlngAdd},fromGeocode);
-    toggleForm();
+    geoCoder.geocode({location:latlngAdd},coordsGeocode);
+
     return latlngAdd;
   });
 
@@ -744,20 +767,20 @@ console.log(latlngAdd);
 let addrr;
 
   //From geocode service
-  function fromGeocode(results,status){
+  function coordsGeocode(results,status){
     if(status === 'OK'){
       let response = results;
       console.log(response);
-      addrr = response[0].formatted_address;   
+      addrr = response[0].formatted_address; 
+      t2.value = addrr;  
     }
-    return addrr
+    return addrr;
   }
-
+ 
 
 // TODO functions improvements
   function fromNearby(results,status,pagination){
-    
-    
+
     if(status === 'OK'){
       
       let response = results;
@@ -773,7 +796,6 @@ let addrr;
       // // response.filter((a)=> a.rating > sortVal );
       // response.sort((a,b)=> a.rating-b.rating);
       response.map((res, key) => {
-       
         // console.log(res);
         // console.log(key);
         //request object literal to be passed on getDetails service
@@ -785,10 +807,7 @@ let addrr;
           service.getDetails(req,toRestaurants);
           reqArr.push(req);
         }
-        
-        
       });
-      
     return reqArr;
     }
   }
@@ -841,13 +860,12 @@ let inputsVals= document.querySelectorAll('#theForm input, #theForm textarea');
 //toggle on off the Form
 function toggleForm(){
    open= !open;
-   t3.value = addrr;
+   
    sendIt.disabled=true;
    console.log(open);
    (open)? formIt.classList.add('showIT'):formIt.classList.remove('showIT');
    (open)? openF.textContent='  CANCEL   ':openF.textContent='Add Restaurant'
    formIt.reset();
-
 }
 //Form validation function
 function vala(e){
@@ -874,7 +892,7 @@ function fromSubmit(e){
         "reviews": [
            {
             "author_name":t4.value,
-            "profile_photo_url":"https://loremflickr.com/200/200",
+            "profile_photo_url":"./img/photo_profile.jpg",
             "rating": t3.value,
             "text": t5.value
 
