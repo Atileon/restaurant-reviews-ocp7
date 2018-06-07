@@ -27,9 +27,9 @@
 
          }
       ],
-      "photos":[
-         {"getUrl()":"return ('./img/revs/img.jpg')"}
-      ],
+      // "photos":[
+      //    {"getUrl()":"return ('./img/revs/img.jpg')"}
+      // ],
       "name":"La Marziana",
       "vicinity":"lala street, 10, Neverland",
       "rating": 5,
@@ -69,10 +69,10 @@
 
          }
       ],
-      "photos":[
-         {"getUrl()":"return ('./img/revs/img.jpg')"}
-      ],
-      "name":"La Marziana II",
+      // "photos":[
+      //    {"getUrl()":"return ('./img/revs/img.jpg')"}
+      // ],
+      "name":"La Marziana",
       "vicinity":"lala street, 10, Neverland",
       "rating": 5,
       "opening_hours": {
@@ -111,10 +111,10 @@
 
          }
       ],
-      "photos":[
-         {"getUrl()":"return ('./img/revs/img.jpg')"}
-      ],
-      "name":"La MarzianaIII",
+      // "photos":[
+      //    {"getUrl()":"return ('./img/revs/img.jpg')"}
+      // ],
+      "name":"La Marziana",
       "vicinity":"lala street, 10, Neverland",
       "rating": 5,
       "opening_hours": {
@@ -124,6 +124,48 @@
       "international_phone_number":"+39035123456",
       "website":"#"
    
-   }
+   },
+   {
+      "id":104,
+      "reviews": [
+         {
+            "author_name":"Helen Bree",
+            "profile_photo_url" : "./img/rev-1.jpg",
+            "rating": 5,
+            "relative_time_description" : "2 weeks ago",
+            "text" : "It was a very great experience"
+
+         },
+         {
+            "author_name":"Jess Grehnan",
+            "profile_photo_url" : "./img/rev-1.jpg",
+            "rating": 5,
+            "relative_time_description" : "2 weeks ago",
+            "text" : "It was a very great experience"
+
+         },
+         {
+            "author_name":"Walt Hoisen",
+            "profile_photo_url" : "./img/rev-1.jpg",
+            "rating": 5,
+            "relative_time_description" : "2 weeks ago",
+            "text" : "It was a very great experience"
+
+         }
+      ],
+      // "photos":[
+      //    {"getUrl()":"return ('./img/revs/img.jpg')"}
+      // ],
+      "name":"La Marziana",
+      "vicinity":"lala street, 10, Neverland",
+      "rating": 5,
+      "opening_hours": {
+         "open_now": true
+      },
+      "url":"#",
+      "international_phone_number":"+39035123456",
+      "website":"#"
+   
+   },
    
 ]

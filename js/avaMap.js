@@ -723,14 +723,16 @@ function errorMessage() {
 
   map.addListener('dblclick',(e)=>{
     console.log(e);
-    toggleForm();
+    
     let coords ={
       lat: e.latLng.lat(),
       lng: e.latLng.lng()
     }
      latlngAdd = new google.maps.LatLng(coords);
     console.log(latlngAdd);
+    // TODO: GEOCODE COORDS AND ADDRESS IMPLEMENT ON FORM DIRECTLY
     geoCoder.geocode({location:latlngAdd},fromGeocode);
+    toggleForm();
     return latlngAdd;
   });
 
@@ -739,13 +741,16 @@ function errorMessage() {
 }//End of main function
 let latlngAdd;
 console.log(latlngAdd);
+let addrr;
+
   //From geocode service
   function fromGeocode(results,status){
     if(status === 'OK'){
       let response = results;
       console.log(response);
-   
+      addrr = response[0].formatted_address;   
     }
+    return addrr
   }
 
 
@@ -795,7 +800,7 @@ console.log(latlngAdd);
   function toRestaurants(place,status){
     if(status=== 'OK') {
       let thePlace =  place;
-      // console.log(place);
+      console.log(place);
       //create Object
       let newRisto =  new Restaurant(thePlace,markArray);
       
@@ -836,6 +841,7 @@ let inputsVals= document.querySelectorAll('#theForm input, #theForm textarea');
 //toggle on off the Form
 function toggleForm(){
    open= !open;
+   t3.value = addrr;
    sendIt.disabled=true;
    console.log(open);
    (open)? formIt.classList.add('showIT'):formIt.classList.remove('showIT');
@@ -857,6 +863,7 @@ function vala(e){
 //from submit form function
 function fromSubmit(e){
       e.preventDefault();
+      let address = addrr;
       let pos = latlngAdd;
       idNewR+=1;
       let objOne={
@@ -866,7 +873,7 @@ function fromSubmit(e){
         },
         "reviews": [
            {
-            "author_name":t2.value,
+            "author_name":t4.value,
             "profile_photo_url":"https://loremflickr.com/200/200",
             "rating": t3.value,
             "text": t5.value
@@ -874,7 +881,7 @@ function fromSubmit(e){
            }
         ],
         "name":t1.value,
-        "vicinity":t2.value,
+        "vicinity":address,
         "rating": t3.value,
         "opening_hours": {
            "open_now": true
@@ -887,7 +894,7 @@ function fromSubmit(e){
          localStorage.setItem('objectOne',JSON.stringify(objOne));
          let see = JSON.parse(localStorage.getItem('objectOne'));
          console.log(see);
-         let newRest = new Restaurant(see, markArray);
+         let newRest = new Restaurant(objOne, markArray);
          newRest.ristoItem();
          newRest.ristoMark(marksOnOff);
          formIt.reset();
