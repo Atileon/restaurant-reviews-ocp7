@@ -1,83 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<!-- css -->
+   <!-- css -->
    <link href="https://fonts.googleapis.com/css?family=Merienda+One|Quattrocento+Sans:400i" rel="stylesheet">
 
    <link rel="stylesheet" href="./css/main.css">
    <title>Review Restaurants P7</title>
 </head>
+
 <body>
    <div id="main-container">
       <div id="formContainer">
-                        
+
          <form id='theForm' action="">
-               <label for="t1">Restaurant name</label>
-               <input id="t1" name="name" type="text"  >
-               <label for="t2">Address</label>
-               <input id="t2" name="address" type="text" placeholder="DoubleTap on Position To get Address" disabled >
-               <label for="t3">Rating</label>
-               <select id="t3" name="rating">
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-               </select>
-               <label for="t4">Your name</label>
-               <input id="t4" name="author" type="text" >
-               <label for="t5">Review</label>
-               <textarea id="t5" name="review" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
-               <button id="sendIt" disabled>Submit</button>
+            <label for="t1">Restaurant name</label>
+            <input id="t1" name="name" type="text">
+            <label for="t2">Address</label>
+            <input id="t2" name="address" type="text" placeholder="DoubleTap on Position To get Address" disabled>
+            <label for="t3">Rating</label>
+            <select id="t3" name="rating">
+               <option value="3">3</option>
+               <option value="4">4</option>
+               <option value="5">5</option>
+            </select>
+            <label for="t4">Your name</label>
+            <input id="t4" name="author" type="text">
+            <label for="t5">Review</label>
+            <textarea id="t5" name="review" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
+            <button id="sendIt" disabled>Submit</button>
          </form>
          <input type="text" id="searchFor" name="searchFor">
          <button id="toggleForm">Add Restaurant</button>
       </div>
 
       <div id="map">
-            
+         
+
       </div>
+      
 
       <div id="right-container">
-            <div id="ui-buttons">
-               <button id="btnMarks" class="mark-on" >Marks ON</button>
-         
-               <!-- form element -->
-               <form id="ui-sort">
-                  <div id="sort-elements">
-                     <label for="ratingSel">Sort by: </label>
-                     <select id="ratingSel" name="ratingSel">
-                        <option value='6' >All</option>
-                        <option value='3.9'>3 Stars</option>
-                        <option value='4.9'>4 Stars</option>
-                        <option value='5'>5 Stars</option>
-                     </select>
-                  </div>
-                  
-                  <button id="ASC" class="btn asc on">ASC &#8593;</button>
-                  
-               </form>
-               <!-- More button -->
-               <div id="more-container">
-                  <button name='more' id="more">More Results</button>
+            <div id='streetViewContainer'>
+
                </div>
+
+         <div id="ui-buttons">
+            <button id="btnMarks" class="mark-on">Marks ON</button>
+
+            <!-- form element -->
+            <form id="ui-sort">
+               <div id="sort-elements">
+                  <label for="ratingSel">Sort by: </label>
+                  <select id="ratingSel" name="ratingSel">
+                     <option value='6'>All</option>
+                     <option value='3.9'>3 Stars</option>
+                     <option value='4.9'>4 Stars</option>
+                     <option value='5'>5 Stars</option>
+                  </select>
+               </div>
+
+               <button id="ASC" class="btn asc on">ASC &#8593;</button>
+
+            </form>
+            <!-- More button -->
+            <div id="more-container">
+               <button name='more' id="more">More Results</button>
             </div>
-            <!-- List container -->
-            <div id="list-container">
-                  
+         </div>
+         <!-- List container -->
+         <div id="list-container">
+
+
+         </div>
+         <!-- Reviews container -->
+         <div id="reviews">
+            <div class="placeholder-img">
+               <p>Click on a Restaurant to get Reviews</p>
             </div>
-            <!-- Reviews container -->
-            <div id="reviews">
-                  <div class="placeholder-img">
-                        <p>Click on a Restaurant to get Reviews</p>
-                  </div>
-            </div>
-            
-            
-            <!-- Here the content -->
+         </div>
+
+
+         <!-- Here the content -->
       </div>
-   <!-- The Legend Box -->
+      <!-- The Legend Box -->
       <div id="legend">
          <h3>Info</h3>
          <ul>
@@ -92,6 +101,7 @@
    <script src="https://maps.googleapis.com/maps/api/js?key=APIKEY&v3.31&libraries=places"></script>
 
    <script src="./js/avaMap.js"></script>
-   
+
 </body>
+
 </html>
