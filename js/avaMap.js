@@ -29,6 +29,7 @@ class Restaurant {
     this.phone = this.ristObj.international_phone_number;
     this.website = this.ristObj.website;
     this.id = this.ristObj.place_id;
+    this.location = this.ristObj.geometry.location;
     //the global marker array
     this.markArr = markArr;
   }
@@ -129,14 +130,15 @@ class Restaurant {
       }
     });
     selEl.addEventListener("click", () => {
+       this.showStreetView();
        svEl.classList.add('showSV');
       reviews.innerHTML = "";
       this.showReviews();
       // console.log(this.showReviews());
       //when markers hidden this show the current marker
       marker.setMap(map);
-      litleInfo.close();
-      info.open(map, marker);
+      litleInfo.open(map, marker);
+      marker.setAnimation(google.maps.Animation.BOUNCE);
       console.log(selEl.id);
       if (this.id === selEl.id) {
         selEl.classList.add("selected");
@@ -148,9 +150,13 @@ class Restaurant {
       info.close();
       selEl.classList.remove("selected");
     });
+    map.addListener('mouseout',()=>{
+      info.close();
+    });
 
     selEl.addEventListener("mouseleave", () => {
-      info.close();
+      litleInfo.close();
+      marker.setAnimation(null);
       selEl.classList.remove("selected");
       // console.log(this.markArr);
     });
@@ -170,9 +176,9 @@ class Restaurant {
       let rating = rev.rating;
       let revDate = rev.relative_time_description;
       let revBody = rev.text;
-      console.log(
-        `the author was ${author} with a rate of ${rating} on date ${revDate} saying that ${revBody}`
-      );
+      // console.log(
+      //   `the author was ${author} with a rate of ${rating} on date ${revDate} saying that ${revBody}`
+      // );
 
       let revContainer = document.createElement("div");
       revContainer.classList.add("rev-container", `rev-${i}`);
@@ -247,9 +253,21 @@ class Restaurant {
     };
     return content;
   }
-//   showStreetView(){
-//      let panorama = new google.maps.StreetViewPanorama
-//   }
+  showStreetView(){
+   let fenway = {lat: 42.345573, lng: -71.098326};
+     let svEl = document.getElementById('streetViewContainer');
+     let svOpt = {
+        position:this.location,
+        pov: {
+         heading: 0,
+         pitch: 0
+       }
+     }
+     svEl.innerHTML = '';
+     let panorama = new google.maps.StreetViewPanorama(svEl,svOpt);
+     map.setStreetView(panorama);
+
+  }
 } //end Restaurant class
 let idNum= 301;
 let map;
@@ -292,21 +310,24 @@ function initMap(position) {
     lat: position.coords.latitude,
     lng: position.coords.longitude
   };
-  // the infowindow object
-  //  infowindow = new google.maps.InfoWindow({
-  //    content: 'Content string to show'
-  //  });
+  //Geocoder service active
   geoCoder = new google.maps.Geocoder();
-  //  Testing the search results into a input text
-  // let inputSearch;
-  // inputSearch = document.getElementById('searchPlace');
-  // search = new google.maps.places.Autocomplete(inputSearch);
-  // inputSearch.addEventListener('keyup',(e)=> {
-  //    e.prenventDefault;
-  //    console.log(inputSearch.value);
-  //    let thePlace = search.getPlace();
-  //       console.log(thePlace);
-  // });
+  //  The search results into a input text
+  let inputSearch;
+  inputSearch = document.getElementById('searchFor');
+  let autoOpt = {
+   types: ['geocode']
+  };
+  search = new google.maps.places.Autocomplete(inputSearch, autoOpt);
+  //Input search handler
+  search.addListener('place_changed',()=> {
+     console.log(inputSearch.value);
+     let thePlace = search.getPlace();
+     console.log(thePlace);
+     let resPos = thePlace.geometry.location;
+        map.panTo(resPos);
+        searchOnChange();
+  });
 
   let latlng = new google.maps.LatLng(userPos);
   let mapOptions = {
@@ -664,7 +685,7 @@ function initMap(position) {
   // Object request to pass on nearbySearch of service
   nearbyReq = {
     location: latlng,
-    radius: 3500,
+    radius: 2000,
     type: ["restaurant"],
     rankBy: google.maps.places.RankBy.PROMINENCE
   };
@@ -820,7 +841,7 @@ console.log(reqArr);
 function toRestaurants(place, status) {
   if (status === "OK") {
     let thePlace = place;
-    console.log(place);
+   //  console.log(place);
     //create Object
     let newRisto = new Restaurant(thePlace, markArray);
 

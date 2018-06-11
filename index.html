@@ -14,8 +14,11 @@
 
 <body>
    <div id="main-container">
+      <!-- StreeView -->
+      <div id='streetViewContainer'>
+      </div>
       <div id="formContainer">
-
+         <!-- Form to add Restaurant -->
          <form id='theForm' action="">
             <label for="t1">Restaurant name</label>
             <input id="t1" name="name" type="text">
@@ -33,26 +36,23 @@
             <textarea id="t5" name="review" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
             <button id="sendIt" disabled>Submit</button>
          </form>
-         <input type="text" id="searchFor" name="searchFor">
          <button id="toggleForm">Add Restaurant</button>
       </div>
-
       <div id="map">
-         
-
       </div>
-      
-
       <div id="right-container">
-            <div id='streetViewContainer'>
+         <!-- Search Input -->
+         <div id='searchInput'>
+            <label for='searchFor'>
+               Search Location
+               <input type="text" id="searchFor" name="searchFor">
+            </label>
 
-               </div>
-
+         </div>
          <div id="ui-buttons">
             <button id="btnMarks" class="mark-on">Marks ON</button>
-
             <!-- form element -->
-            <form id="ui-sort">
+            <div id="ui-sort">
                <div id="sort-elements">
                   <label for="ratingSel">Sort by: </label>
                   <select id="ratingSel" name="ratingSel">
@@ -65,7 +65,7 @@
 
                <button id="ASC" class="btn asc on">ASC &#8593;</button>
 
-            </form>
+            </div>
             <!-- More button -->
             <div id="more-container">
                <button name='more' id="more">More Results</button>
@@ -73,8 +73,6 @@
          </div>
          <!-- List container -->
          <div id="list-container">
-
-
          </div>
          <!-- Reviews container -->
          <div id="reviews">
@@ -82,8 +80,6 @@
                <p>Click on a Restaurant to get Reviews</p>
             </div>
          </div>
-
-
          <!-- Here the content -->
       </div>
       <!-- The Legend Box -->
