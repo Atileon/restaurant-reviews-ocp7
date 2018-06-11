@@ -43,11 +43,19 @@ font-family: 'Merienda One', cursive;
     top: 0;
     left: -100%;
     z-index: 900;
-    transition: all .3s ease-in-out;
+    transition: all .7s ease-in-out;
+    box-shadow: 7px 7px 50px 10px #000000;
+    border-radius: 0 0 15px 0;
+    border: 1px solid #950606;
+    border-top: none;
+    border-left: none;
 }
 .showSV{
    opacity: 1 !important;
    left: 0 !important;
+}
+#streetViewContainer:hover{
+   box-shadow: 7px 7px 50px 10px #950606;
 }
 /* ================= LIST STYLE ================= */
 #list-container::-webkit-scrollbar {
@@ -67,7 +75,7 @@ font-family: 'Merienda One', cursive;
     height: 100%;
     /* overflow: hidden; */
     overflow-y: hidden;
-    box-shadow: -3px 0px 200px #e64133;
+    box-shadow: -3px 0px 200px #950606;
 }
 #list-container{
     flex: 1;
@@ -250,7 +258,7 @@ font-family: 'Merienda One', cursive;
    background-color: #fff;
    /* box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6); */
    /* border: 10px solid rgba(72, 181, 233, 0.6); */
-   border-radius: 2px 2px 0 0;
+   /* border-radius: 2px 2px 0 0; */
  } 
 .cont-detail{
    width: 100%;
@@ -259,9 +267,10 @@ font-family: 'Merienda One', cursive;
     color: #640000;
 }
 .cont-detail h2{
+   font-family: 'Merienda One', cursive;
    text-align: center;
    padding: .5em;
-   font-size: 2em;
+   font-size: 1.5em;
 }
 .details{
     display:flex;	
@@ -317,8 +326,9 @@ font-family: 'Merienda One', cursive;
    color: #4b1212;
 }
 .litle-name{
+   font-family: 'Merienda One', cursive;
    text-align: center;
-    font-size: 1.6em;
+    font-size: 1.3em;
     padding-bottom: .3em;
 }
 .litle-desc{
