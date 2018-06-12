@@ -487,11 +487,15 @@ textarea{
    padding: 1em;
    background: #212121;
    border: none;
-   box-shadow: 0px 0px 50px 3px red;
+   border-bottom: 1px solid black;
    color: red;
    width: 100%;
    z-index: 999;
    position: relative;
+   transition: all .3s ease-in-out;
+}
+#closeForm:hover{
+   box-shadow: 0px 0px 50px 3px red;
 }
 #formContainer{
    visibility: hidden;
@@ -538,7 +542,7 @@ textarea{
 #formContainer.showIT{
     visibility: visible;
     transform: translateX(0);
-    opacity: .9 ;
+    opacity: 1 ;
 }
 #sendIt{
     width: 100%;
