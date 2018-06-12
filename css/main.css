@@ -44,7 +44,7 @@ font-family: 'Merienda One', cursive;
     left: -100%;
     z-index: 900;
     transition: all .7s ease-in-out;
-    box-shadow: 7px 7px 50px 10px #000000;
+    box-shadow: 7px 7px 70px 7px #000000;
     border-radius: 0 0 15px 0;
     border: 1px solid #950606;
     border-top: none;
@@ -55,7 +55,7 @@ font-family: 'Merienda One', cursive;
    left: 0 !important;
 }
 #streetViewContainer:hover{
-   box-shadow: 7px 7px 50px 10px #950606;
+   box-shadow: 0px 0px 77px 7px #950606;
 }
 /* ================= LIST STYLE ================= */
 #list-container::-webkit-scrollbar {

@@ -24,7 +24,7 @@ class Restaurant {
     this.name = this.ristObj.name;
     this.address = this.ristObj.vicinity;
     this.stars = this.ristObj.rating;
-    this.open = this.ristObj.opening_hours.open_now;
+    this.open = (!this.ristObj.opening_hours.open_now)?false: true;
     this.toGoogle = this.ristObj.url;
     this.phone = this.ristObj.international_phone_number;
     this.website = this.ristObj.website;
@@ -692,7 +692,7 @@ function initMap(position) {
 
   map.addListener("dragend", searchOnChange);
   function searchOnChange() {
-    sortVal = Number(sortEl.value);
+   //  sortVal = Number(sortEl.value);
     markArray.map(item => item.setMap(null));
     markArray =[];
     divList.innerHTML= '';
@@ -708,7 +708,7 @@ function initMap(position) {
   }
   // sort listener recalls the searchNear fn, thus refresh the search with rating value
   // console.log(sortEl);
-  sortEl.addEventListener("change", searchNear);
+  sortEl.addEventListener("change", searchOnChange);
   btnAsc.addEventListener("click", e => {
     e.preventDefault();
     ASC = !ASC;
@@ -828,7 +828,7 @@ function fromNearby(results, status, pagination) {
           placeId: res.place_id
         };
         service.getDetails(req, toRestaurants);
-        reqArr.push(req);
+      //   reqArr.push(req);
       }
     });
     return reqArr;
