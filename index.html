@@ -19,24 +19,24 @@
       </div>
       <div id="formContainer">
          <!-- Form to add Restaurant -->
+         <button id="closeForm">Add Restaurant</button>
          <form id='theForm' action="">
-            <label for="t1">Restaurant name</label>
-            <input id="t1" name="name" type="text">
-            <label for="t2">Address</label>
-            <input id="t2" name="address" type="text" placeholder="DoubleTap on Position To get Address" disabled>
+            <label for="t1">Address</label>
+            <input id="t1" name="address" type="text" placeholder="DoubleTap on Position To get Address" disabled required>
+            <label for="t2">Restaurant name</label>
+            <input id="t2" name="name" type="text" required>
             <label for="t3">Rating</label>
-            <select id="t3" name="rating">
+            <select id="t3" name="rating" required>
                <option value="3">3</option>
                <option value="4">4</option>
                <option value="5">5</option>
             </select>
             <label for="t4">Your name</label>
-            <input id="t4" name="author" type="text">
+            <input id="t4" name="author" type="text" required>
             <label for="t5">Review</label>
-            <textarea id="t5" name="review" cols="30" rows="10" placeholder="All the fields must to be completed otherwise the form wouldn't be sent"></textarea>
+            <textarea id="t5" name="review" cols="30" rows="5" placeholder="All the fields must to be completed otherwise the form wouldn't be sent" required></textarea>
             <button id="sendIt" disabled>Submit</button>
          </form>
-         <button id="toggleForm">Add Restaurant</button>
       </div>
       <div id="map">
       </div>
@@ -57,8 +57,8 @@
                   <label for="ratingSel">Sort by: </label>
                   <select id="ratingSel" name="ratingSel">
                      <option value='6'>All</option>
-                     <option value='3.9'>3 Stars</option>
-                     <option value='4.9'>4 Stars</option>
+                     <option value='3'>3 Stars</option>
+                     <option value='4'>4 Stars</option>
                      <option value='5'>5 Stars</option>
                   </select>
                </div>
@@ -84,11 +84,8 @@
       </div>
       <!-- The Legend Box -->
       <div id="legend">
-         <h3>Info</h3>
-         <ul>
-            <li>Tap twice on respective position to add Restaurant</li>
-           
-         </ul>
+         <h3 class="legend-title">Info</h3>
+         <p class="legend-info">To add A New Restaurant: Double-Click on map at Respective Restaurant's Position</p>
       </div>
    </div>
 

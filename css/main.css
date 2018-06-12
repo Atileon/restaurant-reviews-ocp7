@@ -40,14 +40,14 @@ font-family: 'Merienda One', cursive;
     width: 535px;
     height: 320px;
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: -100%;
     z-index: 900;
     transition: all .7s ease-in-out;
-    box-shadow: 7px 7px 70px 7px #000000;
-    border-radius: 0 0 15px 0;
+    box-shadow: 7px -7px 70px 7px #000000;
+    border-radius: 0 10px 0  0;
     border: 1px solid #950606;
-    border-top: none;
+    border-bottom: none;
     border-left: none;
 }
 .showSV{
@@ -355,23 +355,34 @@ font-family: 'Merienda One', cursive;
    font-size: .7em;
 }
 /* =============Legend============= */
-#inputBtn{
+
+#legend {
+   opacity: .7;
     position: absolute;
     top: 0;
-    left: 50%;
-    z-index: 100;
-}
-#legend {
-    position: absolute;
-    bottom: 0;
     right: 0;
     background: #fff;
     padding: 15px;
-    height: 90px;
+    width: 300px;
+   border-radius: 0 0 0 5px;
     border: 1px solid red;
     background: #212121;
     color: white;
+    transition: all .2s ease-in-out;
   }
+  #legend:hover{
+     opacity: 1;
+     box-shadow: 0px 0px 50px 3px red;
+  }
+.legend-title{
+   font-family: 'Quattrocento Sans', sans-serif;
+   font-size: 1.7em;
+}
+.legend-info{
+   font-family: 'Quattrocento Sans', sans-serif;
+   font-size: 1.2em;
+   letter-spacing: 1px;
+}
 
 /* ==============  UI   ================ */
 button:focus , select:focus{
@@ -468,35 +479,44 @@ button:focus , select:focus{
 }
 
 /* ==============THE FORM================= */
+textarea{
+   resize:none;
+}
 
-#toggleForm{
-    padding: 1em;
-    background: #212121;
-    border: 1px solid red;
-    color: red;
-    width: 100%;
+#closeForm{
+   padding: 1em;
+   background: #212121;
+   border: none;
+   box-shadow: 0px 0px 50px 3px red;
+   color: red;
+   width: 100%;
+   z-index: 999;
+   position: relative;
 }
 #formContainer{
+   visibility: hidden;
+   opacity: 0;
     width: 300px;
     position: absolute;
     z-index: 900;
-    bottom: 0;
+    top: 0;
     left: 0;
-    
+    transform: translateX(-777px);
+    transition: all 1s ease-in-out;
 }
 #theForm{
-    visibility: hidden;
-    display: flex;
-    opacity: 0;
-    transform: translateX(-777px);
-    flex-direction: column;
-    width: 100%;
-    margin: 0 auto;
-    transition: all 1s ease-in-out;
-    padding: 1em;
-    background: #212121;
-    border: 1px solid red;
-    border-radius: 25px 25px 0 0;
+   /* visibility: hidden; */
+   display: flex;
+   /* opacity: 0; */
+   /* transform: translateX(-777px); */
+   flex-direction: column;
+   width: 100%;
+   margin: 0 auto;
+   padding: 1em;
+   background: #212121;
+   box-shadow: 0px 0px 50px 3px red;
+   /* border: 1px solid red; */
+   border-radius: 0 0 10px 10px;
 }
 #theForm input, #theForm textarea, #theForm select{
     padding: .5em;
@@ -515,10 +535,10 @@ button:focus , select:focus{
     padding: .3em;
 }
 
-#theForm.showIT{
+#formContainer.showIT{
     visibility: visible;
     transform: translateX(0);
-    opacity: 1 ;
+    opacity: .9 ;
 }
 #sendIt{
     width: 100%;

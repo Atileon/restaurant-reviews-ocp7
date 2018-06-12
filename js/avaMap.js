@@ -119,6 +119,7 @@ class Restaurant {
     });
     // marker/selEl listeners to open info window
     marker.addListener("click", () => {
+      map.panTo(this.location);
       reviews.innerHTML = "";
       this.showReviews();
       litleInfo.close();
@@ -130,6 +131,7 @@ class Restaurant {
       }
     });
     selEl.addEventListener("click", () => {
+       map.panTo(this.location);
        this.showStreetView();
        svEl.classList.add('showSV');
       reviews.innerHTML = "";
@@ -331,7 +333,7 @@ function initMap(position) {
 
   let latlng = new google.maps.LatLng(userPos);
   let mapOptions = {
-    zoom: 13,
+    zoom: 15,
     center: latlng,
     backgroundColor: "#0a0808",
     disableDefaultUI: true,
@@ -692,7 +694,7 @@ function initMap(position) {
 
   map.addListener("dragend", searchOnChange);
   function searchOnChange() {
-   //  sortVal = Number(sortEl.value);
+    sortVal = Number(sortEl.value);
     markArray.map(item => item.setMap(null));
     markArray =[];
     divList.innerHTML= '';
@@ -739,7 +741,7 @@ function initMap(position) {
 
   function searchNear() {
     sortVal = Number(sortEl.value);
-    console.log(sortVal);
+   //  console.log(sortVal);
     markArray.map(item => item.setMap(null));
     markArray = [];
     divList.innerHTML = "";
@@ -756,7 +758,7 @@ function initMap(position) {
   });
 
   //This append the info legend on map
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
     document.getElementById("legend")
   );
 
@@ -787,6 +789,8 @@ function initMap(position) {
   map.addListener("dblclick", e => {
     console.log(e);
     idNum += 1;
+    open=true;
+    toggleForm();
     let coords = {
       lat: e.latLng.lat(),
       lng: e.latLng.lng()
@@ -805,8 +809,8 @@ function fromNearby(results, status, pagination) {
   if (status === "OK") {
     let response = results;
     //implement the sort on response
-    //TODO> Filter functions
-    console.log(sortVal);
+
+   //  console.log(sortVal);
     morebtn.disabled = !pagination.hasNextPage;
     !morebtn.disabled
       ? (morebtn.textContent = "There's More Restaurants!")
@@ -823,7 +827,7 @@ function fromNearby(results, status, pagination) {
       // console.log(res);
       // console.log(key);
       //request object literal to be passed on getDetails service
-      if (res.rating <= sortVal) {
+      if (res.rating <= sortVal+0.9 && res.rating >= sortVal||sortVal === 6) {
         let req = {
           placeId: res.place_id
         };
@@ -834,7 +838,7 @@ function fromNearby(results, status, pagination) {
     return reqArr;
   }
 }
-console.log(reqArr);
+// console.log(reqArr);
 
 // allMarkers = false;
 //Convert place details results into Restaurant Objects
@@ -850,7 +854,7 @@ function toRestaurants(place, status) {
   }
   return ristoArray;
 }
-console.log(ristoArray);
+// console.log(ristoArray);
 // ============================================
 
 let latlngAdd;
@@ -863,21 +867,29 @@ function coordsGeocode(results, status) {
     let response = results;
     console.log(response);
     addrr = response[0].formatted_address;
-    t2.value = addrr;
+    t1.value = addrr;
   }
   return addrr;
 }
 
 // ================= The Form To Add Restaurant ==========
-let formIt = document.getElementById("theForm");
+let formContainer = document.getElementById("formContainer");
+let formIt = document.getElementById('theForm')
 let sendIt = document.getElementById("sendIt");
 let closeIt = document.getElementById("closeIt");
-let openF = document.getElementById("toggleForm");
+let closeBtnForm = document.getElementById("closeForm");
 //open form: boolean
 let open = false;
-openF.onclick = toggleForm;
+closeBtnForm.onclick = closeForm;
 
-let btnONOFF = false;
+function closeForm(){
+   open=false;
+   toggleForm();
+   formIt.reset();
+}
+
+let validInput = false;
+let formBtn = false;
 
 let t1 = document.getElementById("t1");
 let t2 = document.getElementById("t2");
@@ -885,36 +897,37 @@ let t3 = document.getElementById("t3");
 let t4 = document.getElementById("t4");
 let t5 = document.getElementById("t5");
 //event handlers and callbacks
-t1.onkeyup = vala;
-t2.onkeyup = vala;
-t3.onkeyup = vala;
-t4.onkeyup = vala;
-t5.onkeyup = vala;
+// t1.oninput = validateInput;
+t2.oninput = validateInput;
+// t3.oninput = validateInput;
+t4.oninput = validateInput;
+t5.oninput = validateInput;
 //button submit event handler
 sendIt.onclick = fromSubmit;
 let inputsVals = document.querySelectorAll("#theForm input, #theForm textarea");
 //toggle on off the Form
 function toggleForm() {
-  open = !open;
-
+   //submit button disabled on form
   sendIt.disabled = true;
-  console.log(open);
-  open ? formIt.classList.add("showIT") : formIt.classList.remove("showIT");
+  //
+  open ? formContainer.classList.add("showIT") : formContainer.classList.remove("showIT");
   open
-    ? (openF.textContent = "  CANCEL   ")
-    : (openF.textContent = "Add Restaurant");
-  formIt.reset();
+    ? (closeBtnForm.textContent = "  CANCEL   ")
+    : (closeBtnForm.textContent = "I'll be back..");
+//   formIt.reset();
+}
+//Input validation
+function validateInput(){
+   if(t2.value&&t4.value&&t5.value){
+      validInput = true;
+   }
+   validateForm();
+   return validInput = false;
 }
 //Form validation function
-function vala(e) {
-  console.log(e);
-  t1.value.length === 0 ? (btnONOFF = false) : (btnONOFF = true);
-  t2.value.length === 0 ? (btnONOFF = false) : (btnONOFF = true);
-  t3.value.length === 0 ? (btnONOFF = false) : (btnONOFF = true);
-  t4.value.length === 0 ? (btnONOFF = false) : (btnONOFF = true);
-  t5.value.length === 0 ? (btnONOFF = false) : (btnONOFF = true);
-  console.log(btnONOFF);
-  btnONOFF ? (sendIt.disabled = false) : (sendIt.disabled = true);
+function validateForm() {
+//   console.log(validInput);
+  validInput ? (sendIt.disabled = false) : (sendIt.disabled = true);
 }
 //from submit form function
 function fromSubmit(e) {
