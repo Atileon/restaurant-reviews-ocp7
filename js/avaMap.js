@@ -439,8 +439,8 @@ function initMap(position) {
     service.nearbySearch(moveReq, fromNearby);
   }
   function sortRestaurants(){
-     sortVal = sortEl.value;
-     if(sortVal=== 'appRest'){
+     sortVal = Number(sortEl.value);
+     if(sortVal=== 7){
         console.log('favourites!!!!!!!!!!!!!!!!');
         callJson();
      }
