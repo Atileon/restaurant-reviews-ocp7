@@ -1,8 +1,8 @@
 //=========== Review Restaurants Project 7 Openclassrooms  ==============
 //   Once upon a time The class Restaurant was here 
 // ================================
-let idNum= 301;
-let map;
+let idNum= 301;//id new Restaurant
+let map;// the map
 let geoCoder;
 let infowindow;
 let litleInfo;
@@ -438,9 +438,17 @@ function initMap(position) {
     };
     service.nearbySearch(moveReq, fromNearby);
   }
+  function sortRestaurants(){
+     sortVal = sortEl.value;
+     if(sortVal=== 'appRest'){
+        console.log('favourites!!!!!!!!!!!!!!!!');
+        callJson();
+     }
+     searchOnChange();
+  }
   // sort listener recalls the searchNear fn, thus refresh the search with rating value
   // console.log(sortEl);
-  sortEl.addEventListener("change", searchOnChange);
+  sortEl.addEventListener("change", sortRestaurants);
   btnAsc.addEventListener("click", e => {
     e.preventDefault();
     ASC = !ASC;
@@ -532,6 +540,7 @@ function initMap(position) {
 
     return latlngAdd;
   });
+
 } //End of main function
 
 // TODO functions improvements
@@ -688,7 +697,7 @@ function fromSubmit(e) {
       open_now: true
     },
     url: "#",
-    international_phone_number: t4.value,
+    international_phone_number: 777777777,
     website: "#"
   };
   localStorage.setItem("objectOne", JSON.stringify(objOne));
@@ -699,4 +708,19 @@ function fromSubmit(e) {
   newRest.ristoMark(marksOnOff);
   formIt.reset();
   sendIt.disabled = true;
+}
+
+function callJson(){
+   fetch('./rests.json')
+   .then(response => response.json())
+   .then(data => {
+      console.log(data);
+      data.map( item =>{
+         let newRisto = new Restaurant(item, markArray);
+    newRisto.ristoItem();
+    newRisto.ristoMark(marksOnOff);
+      });
+      
+   })
+   .catch(error => console.log('error is', error));
 }

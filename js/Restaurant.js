@@ -124,7 +124,7 @@ class Restaurant {
       this.showReviews();
       litleInfo.close();
       info.open(map, marker);
-      console.log(selEl.id);
+      console.log(selEl);
       if (this.id === selEl.id) {
         // allItems.classList.remove('selected');
         selEl.classList.add("selected");
@@ -256,7 +256,6 @@ class Restaurant {
     return content;
   }
   showStreetView() {
-    let fenway = { lat: 42.345573, lng: -71.098326 };
     let svEl = document.getElementById("streetViewContainer");
     let svOpt = {
       position: this.location,

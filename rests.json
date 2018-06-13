@@ -1,45 +1,118 @@
 [
    {
-      "id":101,
-      "reviews": [
+      "place_id": "app-701",
+       "geometry": {
+         "location": {"lat": 45.715119889018176, "lng": 9.675419792702996}
+       },
+       "reviews": [
          {
-            "author_name":"Helen Bree",
-            "profile_photo_url" : "./img/rev-1.jpg",
-            "rating": 5,
-            "relative_time_description" : "2 weeks ago",
-            "text" : "It was a very great experience"
-
-         },
-         {
-            "author_name":"Jess Grehnan",
-            "profile_photo_url" : "./img/rev-1.jpg",
-            "rating": 5,
-            "relative_time_description" : "2 weeks ago",
-            "text" : "It was a very great experience"
-
-         },
-         {
-            "author_name":"Walt Hoisen",
-            "profile_photo_url" : "./img/rev-1.jpg",
-            "rating": 5,
-            "relative_time_description" : "2 weeks ago",
-            "text" : "It was a very great experience"
-
+           "author_name": "Steve Norman",
+           "profile_photo_url": "./img/photo_profile.jpg",
+           "rating": 5,
+           "text": "Gnam gnam what a good taste!!"
          }
-      ],
-      "photos":[
-         {"getUrl()":"return ('./img/revs/img.jpg')"}
-      ],
-      "name":"La Marziana",
-      "vicinity":"lala street, 10, Neverland",
-      "rating": 5,
-      "opening_hours": {
+       ],
+       "name": "The Cave (App)",
+       "vicinity": "SS470, 24123 Bergamo BG, Italia",
+       "rating": 5,
+       "opening_hours": {
          "open_now": true
-      },
-      "url":"#",
-      "international_phone_number":"+39035123456",
-      "website":"#"
-   
-   
-   
+       },
+       "url": "#",
+       "international_phone_number": 777777777,
+       "website": "#"
+     },
+     {
+      "place_id": "app-702",
+       "geometry": {
+         "location": {"lat": 45.743698417799614, "lng": 9.617331268517319}
+       },
+       "reviews": [
+         {
+           "author_name": "Steve Norman",
+           "profile_photo_url": "./img/photo_profile.jpg",
+           "rating": 5,
+           "text": "Oh my! It was the better place that I found!! I felt like a child!!"
+         }
+       ],
+       "name": "The Nestle(App)",
+       "vicinity": "Via Italia, 64, 24011 Almè BG, Italia",
+       "rating": 5,
+       "opening_hours": {
+         "open_now": true
+       },
+       "url": "#",
+       "international_phone_number": 777777777,
+       "website": "#"
+     },
+     {
+      "place_id": "app-703",
+       "geometry": {
+         "location": 
+         {"lat": 45.70595282210741, "lng": 9.69413200294207}
+       },
+       "reviews": [
+         {
+           "author_name": "Steve Norman",
+           "profile_photo_url": "./img/photo_profile.jpg",
+           "rating": 5,
+           "text": "Yeah!! On the Road !!! this place are going right on the road and will go ahead for a long long time if they cook as good as now!"
+         }
+       ],
+       "name": "On the Road(App)",
+       "vicinity": "SS470, 24124 Bergamo BG, Italia",
+       "rating": 5,
+       "opening_hours": {
+         "open_now": true
+       },
+       "url": "#",
+       "international_phone_number": 777777777,
+       "website": "#"
+     },
+     {
+      "place_id": "app-704",
+       "geometry": {
+         "location": {"lat": 45.54160074987557, "lng": 9.935133642839332}
+       },
+       "reviews": [
+         {
+           "author_name": "Steve Norman",
+           "profile_photo_url": "./img/photo_profile.jpg",
+           "rating": 5,
+           "text": "Very peaceful place! I was really hungry!!"
+         }
+       ],
+       "name": "Da Vittorio(App)",
+       "vicinity": "Via Vittorio Veneto, 11, 25032 Chiari BS, Italia",
+       "rating": 5,
+       "opening_hours": {
+         "open_now": true
+       },
+       "url": "#",
+       "international_phone_number": 777777777,
+       "website": "#"
+     },
+     {
+      "place_id": "app-705",
+       "geometry": {
+         "location": {"lat": 45.63171484688673, "lng": 10.589587406882401}
+       },
+       "reviews": [
+         {
+           "author_name": "Steve Norman",
+           "profile_photo_url": "./img/photo_profile.jpg",
+           "rating": 5,
+           "text": "Awesome place with an awesome view of lake!"
+         }
+       ],
+       "name": "Garda(App)",
+       "vicinity": "SS45bis, 38, 25088 Toscolano Maderno BS, Italia",
+       "rating": 5,
+       "opening_hours": {
+         "open_now": true
+       },
+       "url": "#",
+       "international_phone_number": 777777777,
+       "website": "#"
+     }
 ]
