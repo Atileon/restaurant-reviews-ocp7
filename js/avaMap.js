@@ -3,17 +3,16 @@
 // ================================
 let idNum= 301;//id new Restaurant
 let map;// the map
-let geoCoder;
-let infowindow;
-let litleInfo;
-let service;
-let search;
-let ristoArray = [];
-let markArray = [];
-let reqArr = []; //array requests for details
-let revArr = [];
-let userPos;
-let marksOnOff = true;
+let geoCoder;// API service
+let infowindow;//Info card on map
+let litleInfo;//Little info card on map
+let placeService;//Place Service 
+let search;//Autocomplete service on search
+
+let markArray = [];//Array for markers
+// let revArr = [];
+let userPos;// The user's position
+let markersOnMap = true;
 let divList = document.getElementById("list-container");
 let sortEl = document.getElementById("ratingSel");
 let btnMarks = document.getElementById("btnMarks");
@@ -413,7 +412,7 @@ function initMap(position) {
   let marker = new google.maps.Marker(markOpt);
 
   // places servicePlace
-  service = new google.maps.places.PlacesService(map);
+  placeService = new google.maps.places.PlacesService(map);
   // Object request to pass on nearbySearch of service
   nearbyReq = {
     location: latlng,
@@ -436,7 +435,7 @@ function initMap(position) {
       type: ["restaurant"],
       rankBy: google.maps.places.RankBy.PROMINENCE
     };
-    service.nearbySearch(moveReq, fromNearby);
+    placeService.nearbySearch(moveReq, fromNearby);
   }
   function sortRestaurants(){
      sortVal = Number(sortEl.value);
@@ -461,20 +460,21 @@ function initMap(position) {
   btnMarks.addEventListener("click", btnMarkers);
   function btnMarkers() {
     // console.log(markArray);
-
-    marksOnOff
-      ? markArray.map(item => item.setMap(null))
-      : markArray.map(item => item.setMap(map));
-    // markArray=[];
-    marksOnOff = !marksOnOff;
-    marksOnOff
+    //switch markers on/off(true/false)
+    markersOnMap = !markersOnMap;
+    //Iteration on the array of markers
+    markersOnMap
+      ? markArray.map(item => item.setMap(map))
+      : markArray.map(item => item.setMap(null));
+   //set button classes for style
+    markersOnMap
       ? btnMarks.classList.add("mark-on")
       : btnMarks.classList.remove("mark-on");
-    marksOnOff
+   //set name of button when state changes
+    markersOnMap
       ? (btnMarks.textContent = "Marks: ON")
       : (btnMarks.textContent = "Marks: OFF");
-    console.log(marksOnOff);
-    // searchNear();
+    console.log(markersOnMap);
   }
 
   function searchNear() {
@@ -483,11 +483,10 @@ function initMap(position) {
     markArray.map(item => item.setMap(null));
     markArray = [];
     divList.innerHTML = "";
-    service.nearbySearch(nearbyReq, fromNearby);
+    placeService.nearbySearch(nearbyReq, fromNearby);
   }
   // ^- service.nearbySearch(nearbyReq,fromNearby);
   searchNear();
-  //  console.log(reqArr);
   // more results button listener
   morebtn.addEventListener("click", () => {
     morebtn.disabled = true;
@@ -570,16 +569,15 @@ function fromNearby(results, status, pagination) {
         let req = {
           placeId: res.place_id
         };
-        service.getDetails(req, toRestaurants);
-      //   reqArr.push(req);
+        placeService.getDetails(req, toRestaurants);
+      
       }
     });
-    return reqArr;
+    
   }
 }
-// console.log(reqArr);
 
-// allMarkers = false;
+
 //Convert place details results into Restaurant Objects
 function toRestaurants(place, status) {
   if (status === "OK") {
@@ -589,11 +587,11 @@ function toRestaurants(place, status) {
     let newRisto = new Restaurant(thePlace, markArray);
 
     newRisto.ristoItem();
-    newRisto.ristoMark(marksOnOff);
+    newRisto.ristoMark(markersOnMap);
   }
-  return ristoArray;
+
 }
-// console.log(ristoArray);
+
 // ============================================
 
 let latlngAdd;
@@ -705,7 +703,7 @@ function fromSubmit(e) {
   console.log(see);
   let newRest = new Restaurant(objOne, markArray);
   newRest.ristoItem();
-  newRest.ristoMark(marksOnOff);
+  newRest.ristoMark(markersOnMap);
   formIt.reset();
   sendIt.disabled = true;
 }
@@ -718,7 +716,7 @@ function callJson(){
       data.map( item =>{
          let newRisto = new Restaurant(item, markArray);
     newRisto.ristoItem();
-    newRisto.ristoMark(marksOnOff);
+    newRisto.ristoMark(markersOnMap);
       });
       
    })
