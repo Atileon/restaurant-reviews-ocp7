@@ -3,6 +3,7 @@
 // ================================
 let idNum= 301;//id new Restaurant
 let map;// the map
+let userMark; // User mark position
 let geoCoder;// API service
 let infowindow;//Info card on map
 let litleInfo;//Little info card on map
@@ -12,16 +13,17 @@ let search;//Autocomplete service on search
 let markArray = [];//Array for markers
 // let revArr = [];
 let userPos;// The user's position
-let markersOnMap = true;
+let markersOnMap = true;//initial state of markers
+//DOM elements
 let divList = document.getElementById("list-container");
-let sortEl = document.getElementById("ratingSel");
-let btnMarks = document.getElementById("btnMarks");
-let sortVal = 0;
+let sortEl = document.getElementById("ratingSel");//select input to sort list
+let btnMarks = document.getElementById("btnMarks");//Markers on-off button
+let sortVal = 0;//initial value of sort
 let btnAsc = document.getElementById("ASC");
 let btnDesc = document.getElementById("DESC");
 let ASC = true;
 let DESC = false;
-let morebtn = document.getElementById("more");
+let morebtn = document.getElementById("more");//more results button
 let getMore;
 
 let nearbyReq;
@@ -30,22 +32,35 @@ navigator.geolocation
   ? navigator.geolocation.getCurrentPosition(initMap, errorMessage)
   : alert("Your browser does not support Geolocation.");
 
-// show error if location can't be found
+// show error if location can't be found BUT render map with a fake position
 function errorMessage() {
-  alert("Location can't be found");
+   let fakePos = {
+      coords: {
+         latitude: 40.712775,
+         longitude: -74.005973
+      }
+   }
+  alert("Application will start without your position, config your browser settings if you want to start on your position");
+  //init with fake position
+  initMap(fakePos);
 }
 
 //This the main function
 function initMap(position) {
-  userPos = {
-    lat: position.coords.latitude,
-    lng: position.coords.longitude
-  };
-  //Geocoder service active
+   console.log(position);
+   userPos = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+   
+   //Geocoder service active
+
   geoCoder = new google.maps.Geocoder();
+
   //  The search results into a input text
   let inputSearch;
   inputSearch = document.getElementById('searchFor');
+  //Autocomplete options
   let autoOpt = {
    types: ['geocode']
   };
@@ -57,6 +72,7 @@ function initMap(position) {
      console.log(thePlace);
      let resPos = thePlace.geometry.location;
         map.panTo(resPos);
+        //when center of map changes because of the search
         searchOnChange();
   });
 
@@ -409,7 +425,7 @@ function initMap(position) {
     animation: google.maps.Animation.BOUNCE,
     title: "You are here! hungry!!"
   };
-  let marker = new google.maps.Marker(markOpt);
+      userMark = new google.maps.Marker(markOpt);
 
   // places servicePlace
   placeService = new google.maps.places.PlacesService(map);
@@ -437,11 +453,12 @@ function initMap(position) {
     };
     placeService.nearbySearch(moveReq, fromNearby);
   }
+  //
   function sortRestaurants(){
      sortVal = Number(sortEl.value);
      if(sortVal=== 7){
         console.log('favourites!!!!!!!!!!!!!!!!');
-        callJson();
+        callJsonRestaurants();
      }
      searchOnChange();
   }
@@ -640,7 +657,12 @@ t2.oninput = validateInput;
 t4.oninput = validateInput;
 t5.oninput = validateInput;
 //button submit event handler
-sendIt.onclick = fromSubmit;
+sendIt.addEventListener('click',(e)=>{
+   //we pass e to prevent default event
+   fromSubmit(e);
+   closeForm();
+});
+
 let inputsVals = document.querySelectorAll("#theForm input, #theForm textarea");
 //toggle on off the Form
 function toggleForm() {
@@ -698,17 +720,18 @@ function fromSubmit(e) {
     international_phone_number: 777777777,
     website: "#"
   };
+  //Assuming to send data to JSON
   localStorage.setItem("objectOne", JSON.stringify(objOne));
   let see = JSON.parse(localStorage.getItem("objectOne"));
   console.log(see);
-  let newRest = new Restaurant(objOne, markArray);
+  let newRest = new Restaurant(see, markArray);
   newRest.ristoItem();
   newRest.ristoMark(markersOnMap);
   formIt.reset();
   sendIt.disabled = true;
 }
-
-function callJson(){
+//just call the json local file
+function callJsonRestaurants(){
    fetch('./rests.json')
    .then(response => response.json())
    .then(data => {

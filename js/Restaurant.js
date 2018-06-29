@@ -18,16 +18,20 @@ class Restaurant {
     this.reviews = this.ristObj.reviews;
     this.photos = this.ristObj.photos;
     this.fakePhoto = "./img/food.jpg";
+    //if object hasnt photo
     this.photo = !this.photos
       ? this.fakePhoto
       : this.ristObj.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
     this.name = this.ristObj.name;
     this.address = this.ristObj.vicinity;
     this.stars = this.ristObj.rating;
+    //open/closed status Restaurant
     this.open = !this.ristObj.opening_hours.open_now ? false : true;
+    //link to view position on googlemaps
     this.toGoogle = this.ristObj.url;
     this.phone = this.ristObj.international_phone_number;
     this.website = this.ristObj.website;
+    //Restaurant Id take the place Id properti
     this.id = this.ristObj.place_id;
     this.location = this.ristObj.geometry.location;
     //the global marker array
@@ -69,7 +73,7 @@ class Restaurant {
   }
 
   ristoMark(bool) {
-    //   test
+
     let svEl = document.getElementById("streetViewContainer");
     let pos = this.ristObj.geometry.location;
     let content = this.showDetails();
@@ -88,14 +92,18 @@ class Restaurant {
          `,
       maxWidth: 200
     };
+    //info card
     let info = new google.maps.InfoWindow(content);
+    //little info card
     let litleInfo = new google.maps.InfoWindow(litleContent);
+    //marker image
     let markImg = {
       url: "./img/mark46x64.png",
       size: new google.maps.Size(46, 64),
       origin: new google.maps.Point(0, 0),
       anchor: new google.maps.Point(0, 64)
     };
+    //marker options
     let markOpt = {
       map: map,
       icon: markImg,
@@ -104,49 +112,67 @@ class Restaurant {
       animation: google.maps.Animation.DROP,
       title: this.name
     };
-    let reviews = document.getElementById("reviews");
-    let selEl = document.getElementById(this.id);
+   //restaurant marker
     let marker = new google.maps.Marker(markOpt);
+   //  push on array of markers
     this.markArr.push(marker);
     // console.log(this.markArr);
+    
+    //Scoped FUNCTIONALITIES
+    let reviews = document.getElementById("reviews");
+    let selEl = document.getElementById(this.id);//THIS item on list
+    //bool is passed to get markers drawn or not
     bool === true ? marker.setMap(map) : "";
     bool === false ? marker.setMap(null) : "";
+   // marker listeners 
     marker.addListener("mouseover", () => {
+      //open little info card on map
       litleInfo.open(map, marker);
     });
+
     marker.addListener("mouseout", () => {
+       //close little info card
       litleInfo.close();
     });
-    // marker/selEl listeners to open info window
-    marker.addListener("click", () => {
+    //marker/item click handler
+    const markerItemClick= ()=>{
+      //center view
       map.panTo(this.location);
+      //empty reviews elements on DOM
       reviews.innerHTML = "";
+      //new reviews on refresh
       this.showReviews();
-      litleInfo.close();
-      info.open(map, marker);
-      console.log(selEl);
+      // console.log(selEl.id);
       if (this.id === selEl.id) {
-        // allItems.classList.remove('selected');
         selEl.classList.add("selected");
       }
+    };
+    marker.addListener("click", () => {
+      markerItemClick();
+      litleInfo.close();
+      info.open(map, marker);
+      
     });
+    //Item(on list) listeners
     selEl.addEventListener("click", () => {
-      map.panTo(this.location);
+      markerItemClick();
+      //show street view
       this.showStreetView();
+      //add class to street view container
       svEl.classList.add("showSV");
-      reviews.innerHTML = "";
-      this.showReviews();
-      // console.log(this.showReviews());
-      //when markers hidden this show the current marker
+      //when markers button off -> this show the marker of THIS restaurant
       marker.setMap(map);
       litleInfo.open(map, marker);
       marker.setAnimation(google.maps.Animation.BOUNCE);
-      console.log(selEl.id);
-      if (this.id === selEl.id) {
-        selEl.classList.add("selected");
-      }
+     
     });
-    // map/selEl listeners to close info window
+    //
+    selEl.addEventListener("mouseleave", () => {
+      litleInfo.close();
+      marker.setAnimation(null);
+      selEl.classList.remove("selected");
+    });
+    // map listeners 
     map.addListener("click", () => {
       svEl.classList.remove("showSV");
       info.close();
@@ -155,13 +181,7 @@ class Restaurant {
     map.addListener("mouseout", () => {
       info.close();
     });
-
-    selEl.addEventListener("mouseleave", () => {
-      litleInfo.close();
-      marker.setAnimation(null);
-      selEl.classList.remove("selected");
-      // console.log(this.markArr);
-    });
+    
   }
   showReviews() {
     let reviews = this.reviews;
@@ -172,18 +192,15 @@ class Restaurant {
     titleDiv.textContent = `"${this.name}" reviews:`;
     revDiv.appendChild(titleDiv);
 
-    reviews.map((rev, i) => {
+    reviews.map((rev, index) => {
       let author = rev.author_name;
       let authPhoto = rev.profile_photo_url;
       let rating = rev.rating;
       let revDate = rev.relative_time_description;
       let revBody = rev.text;
-      // console.log(
-      //   `the author was ${author} with a rate of ${rating} on date ${revDate} saying that ${revBody}`
-      // );
 
       let revContainer = document.createElement("div");
-      revContainer.classList.add("rev-container", `rev-${i}`);
+      revContainer.classList.add("rev-container", `rev-${index}`);
 
       //Create 2 divs to separate the author photo and the content
       let leftDiv = document.createElement("div");
