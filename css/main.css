@@ -588,3 +588,22 @@ textarea{
    border: none;
    outline: #460202;
 }
+
+/* ==================  SEARCH FIELD =========================  */
+.pac-container{
+   background: #272727;
+   color: red;
+   box-shadow: 0px 3px 10px #000000;
+}
+.pac-icon{
+   color:#950606;
+}
+.pac-item-query{
+   color: #b3a348;
+}
+.pac-matched{
+   color: red;
+}
+.pac-item:hover, .pac-item-selected{
+   background: #000000;
+}

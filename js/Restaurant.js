@@ -2,6 +2,7 @@
 //  The Restaurant object is created from the Google Api Response
 class Restaurant {
   constructor(ristObject, markArr) {
+     //css classes
     this.listCont = "list-container"; //Main list Container
     this.descrClass = "risto-descr"; //Class for description container (name & address)
     this.itemClass = "risto-item"; // Class for the item

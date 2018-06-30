@@ -1,29 +1,29 @@
 //=========== Review Restaurants Project 7 Openclassrooms  ==============
-//   Once upon a time The class Restaurant was here 
+//   Once upon a time The class Restaurant was here
 // ================================
-let idNum= 301;//id new Restaurant
-let map;// the map
+let idNum = 301; //id new Restaurant
+let map; // the map
 let userMark; // User mark position
-let geoCoder;// API service
-let infowindow;//Info card on map
-let litleInfo;//Little info card on map
-let placeService;//Place Service 
-let search;//Autocomplete service on search
+let geoCoder; // API service
+let infowindow; //Info card on map
+let litleInfo; //Little info card on map
+let placeService; //Place Service
+let search; //Autocomplete service on search
 
-let markArray = [];//Array for markers
+let markArray = []; //Array for markers
 // let revArr = [];
-let userPos;// The user's position
-let markersOnMap = true;//initial state of markers
+let userPos; // The user's position
+let markersOnMap = true; //initial state of markers
 //DOM elements
 let divList = document.getElementById("list-container");
-let sortEl = document.getElementById("ratingSel");//select input to sort list
-let btnMarks = document.getElementById("btnMarks");//Markers on-off button
-let sortVal = 0;//initial value of sort
+let sortEl = document.getElementById("ratingSel"); //select input to sort list
+let btnMarks = document.getElementById("btnMarks"); //Markers on-off button
+let sortVal = 0; //initial value of sort
 let btnAsc = document.getElementById("ASC");
 let btnDesc = document.getElementById("DESC");
 let ASC = true;
 let DESC = false;
-let morebtn = document.getElementById("more");//more results button
+let morebtn = document.getElementById("more"); //more results button
 let getMore;
 
 let nearbyReq;
@@ -34,52 +34,54 @@ navigator.geolocation
 
 // show error if location can't be found BUT render map with a fake position
 function errorMessage() {
-   let fakePos = {
-      coords: {
-         latitude: 40.712775,
-         longitude: -74.005973
-      }
-   }
-  alert("Application will start without your position, config your browser settings if you want to start on your position");
+  let fakePos = {
+    coords: {
+      latitude: 40.712775,
+      longitude: -74.005973
+    }
+  };
+  alert(
+    "Application will start without your position, config your browser settings if you want to start on your position"
+  );
   //init with fake position
   initMap(fakePos);
 }
 
 //This the main function
 function initMap(position) {
-   console.log(position);
-   userPos = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    };
-   
-   //Geocoder service active
+  console.log(position);
+  userPos = {
+    lat: position.coords.latitude,
+    lng: position.coords.longitude
+  };
+
+  //Geocoder service active
 
   geoCoder = new google.maps.Geocoder();
 
   //  The search results into a input text
   let inputSearch;
-  inputSearch = document.getElementById('searchFor');
+  inputSearch = document.getElementById("searchFor");
   //Autocomplete options
   let autoOpt = {
-   types: ['geocode']
+    types: ["geocode"]
   };
   search = new google.maps.places.Autocomplete(inputSearch, autoOpt);
   //Input search handler
-  search.addListener('place_changed',()=> {
-     console.log(inputSearch.value);
-     let thePlace = search.getPlace();
-     console.log(thePlace);
-     let resPos = thePlace.geometry.location;
-        map.panTo(resPos);
-        //when center of map changes because of the search
-        searchOnChange();
+  search.addListener("place_changed", () => {
+    console.log(inputSearch.value);
+    let thePlace = search.getPlace();
+    console.log(thePlace);
+    let resPos = thePlace.geometry.location;
+    map.panTo(resPos);
+    //when center of map changes because of the search
+    searchOnChange();
   });
 
-  let latlng = new google.maps.LatLng(userPos);
+  let startLatLng = new google.maps.LatLng(userPos);
   let mapOptions = {
     zoom: 15,
-    center: latlng,
+    center: startLatLng,
     backgroundColor: "#0a0808",
     disableDefaultUI: true,
     disableDoubleClickZoom: true,
@@ -425,24 +427,27 @@ function initMap(position) {
     animation: google.maps.Animation.BOUNCE,
     title: "You are here! hungry!!"
   };
-      userMark = new google.maps.Marker(markOpt);
+  userMark = new google.maps.Marker(markOpt);
 
   // places servicePlace
   placeService = new google.maps.places.PlacesService(map);
   // Object request to pass on nearbySearch of service
   nearbyReq = {
-    location: latlng,
+    location: startLatLng,
     radius: 2000,
     type: ["restaurant"],
     rankBy: google.maps.places.RankBy.PROMINENCE
   };
+  function searchNear() {
+    resetRestaurants();
+    placeService.nearbySearch(nearbyReq, fromNearby);
+  }
+  // ^- service.nearbySearch(nearbyReq,fromNearby);
+  searchNear();
 
   map.addListener("dragend", searchOnChange);
   function searchOnChange() {
-    sortVal = Number(sortEl.value);
-    markArray.map(item => item.setMap(null));
-    markArray =[];
-    divList.innerHTML= '';
+    resetRestaurants();
     let coordMove = map.getCenter();
     console.log(coordMove);
     let moveReq = {
@@ -453,14 +458,21 @@ function initMap(position) {
     };
     placeService.nearbySearch(moveReq, fromNearby);
   }
+  // Reset restaurants list,markers
+  function resetRestaurants() {
+    sortVal = Number(sortEl.value);
+    markArray.map(item => item.setMap(null));
+    markArray = [];
+    divList.innerHTML = "";
+  }
   //
-  function sortRestaurants(){
-     sortVal = Number(sortEl.value);
-     if(sortVal=== 7){
-        console.log('favourites!!!!!!!!!!!!!!!!');
-        callJsonRestaurants();
-     }
-     searchOnChange();
+  function sortRestaurants() {
+    sortVal = Number(sortEl.value);
+    if (sortVal === 7) {
+      console.log("favourites!!!!!!!!!!!!!!!!");
+      callJsonRestaurants();
+    }
+    searchOnChange();
   }
   // sort listener recalls the searchNear fn, thus refresh the search with rating value
   // console.log(sortEl);
@@ -472,7 +484,7 @@ function initMap(position) {
       ? (btnAsc.textContent = "ASC \u2191")
       : (btnAsc.textContent = "DESC \u2193");
     ASC ? btnAsc.classList.add("on") : btnAsc.classList.remove("on");
-    sortDamn();
+    sortRistos();
   });
   btnMarks.addEventListener("click", btnMarkers);
   function btnMarkers() {
@@ -483,32 +495,22 @@ function initMap(position) {
     markersOnMap
       ? markArray.map(item => item.setMap(map))
       : markArray.map(item => item.setMap(null));
-   //set button classes for style
+    //set button classes for style
     markersOnMap
       ? btnMarks.classList.add("mark-on")
       : btnMarks.classList.remove("mark-on");
-   //set name of button when state changes
+    //set name of button when state changes
     markersOnMap
       ? (btnMarks.textContent = "Marks: ON")
       : (btnMarks.textContent = "Marks: OFF");
     console.log(markersOnMap);
   }
 
-  function searchNear() {
-    sortVal = Number(sortEl.value);
-   //  console.log(sortVal);
-    markArray.map(item => item.setMap(null));
-    markArray = [];
-    divList.innerHTML = "";
-    placeService.nearbySearch(nearbyReq, fromNearby);
-  }
-  // ^- service.nearbySearch(nearbyReq,fromNearby);
-  searchNear();
   // more results button listener
   morebtn.addEventListener("click", () => {
     morebtn.disabled = true;
     getMore ? getMore() : "";
-    sortDamn();
+    sortRistos();
   });
 
   //This append the info legend on map
@@ -517,11 +519,11 @@ function initMap(position) {
   );
 
   //Local function to sort
-  function sortDamn() {
-    let elementsDOM = document.getElementsByClassName("risto-item");
-    let arrDOM = Array.from(elementsDOM);
+  function sortRistos() {
+    let ristoItemDOM = document.getElementsByClassName("risto-item");
+    let arrDOM = Array.from(ristoItemDOM);
     console.log(arrDOM);
-    console.log(elementsDOM);
+    console.log(ristoItemDOM);
     divList.innerHTML = "";
     arrDOM.sort(compare);
     // arrDOM.filter();
@@ -536,36 +538,35 @@ function initMap(position) {
     }
     return a.dataset.rating - b.dataset.rating;
   }
-  sortDamn();
+  sortRistos();
 
   // ====GEOCODER===
-
   map.addListener("dblclick", e => {
     console.log(e);
-    idNum += 1;
-    open=true;
+    idNum = Date.now();
+   //  console.log(idNum);
+    open = true;
+    //open the form
     toggleForm();
+    //event coordinates on map
     let coords = {
       lat: e.latLng.lat(),
       lng: e.latLng.lng()
     };
     latlngAdd = new google.maps.LatLng(coords);
     console.log(latlngAdd);
-    // TODO: GEOCODE COORDS AND ADDRESS IMPLEMENT ON FORM DIRECTLY
+    // Get the address 
     geoCoder.geocode({ location: latlngAdd }, coordsGeocode);
 
     return latlngAdd;
   });
-
 } //End of main function
 
-// TODO functions improvements
+// callback to nearbySearch method 
 function fromNearby(results, status, pagination) {
   if (status === "OK") {
     let response = results;
-    //implement the sort on response
 
-   //  console.log(sortVal);
     morebtn.disabled = !pagination.hasNextPage;
     !morebtn.disabled
       ? (morebtn.textContent = "There's More Restaurants!")
@@ -575,42 +576,39 @@ function fromNearby(results, status, pagination) {
       function() {
         pagination.nextPage();
       };
-    // console.log(getMore);
-    // // response.filter((a)=> a.rating > sortVal );
-    // response.sort((a,b)=> a.rating-b.rating);
+   
     response.map((res, key) => {
       // console.log(res);
       // console.log(key);
       //request object literal to be passed on getDetails service
-      if (res.rating <= sortVal+0.9 && res.rating >= sortVal||sortVal === 6) {
+      if (
+        (res.rating <= sortVal + 0.9 && res.rating >= sortVal) ||
+        sortVal === 6
+      ) {
         let req = {
           placeId: res.place_id
         };
         placeService.getDetails(req, toRestaurants);
-      
       }
     });
-    
   }
 }
-
 
 //Convert place details results into Restaurant Objects
 function toRestaurants(place, status) {
   if (status === "OK") {
     let thePlace = place;
-   //  console.log(place);
+    //  console.log(place);
     //create Object
     let newRisto = new Restaurant(thePlace, markArray);
 
     newRisto.ristoItem();
     newRisto.ristoMark(markersOnMap);
   }
-
 }
 
 // ============================================
-
+//global values to pass on add Restaurant form
 let latlngAdd;
 console.log(latlngAdd);
 let addrr;
@@ -620,7 +618,9 @@ function coordsGeocode(results, status) {
   if (status === "OK") {
     let response = results;
     console.log(response);
+    //address formatted (human readable)
     addrr = response[0].formatted_address;
+    //insert value on input field on form
     t1.value = addrr;
   }
   return addrr;
@@ -628,7 +628,7 @@ function coordsGeocode(results, status) {
 
 // ================= The Form To Add Restaurant ==========
 let formContainer = document.getElementById("formContainer");
-let formIt = document.getElementById('theForm')
+let formIt = document.getElementById("theForm");
 let sendIt = document.getElementById("sendIt");
 let closeIt = document.getElementById("closeIt");
 let closeBtnForm = document.getElementById("closeForm");
@@ -636,10 +636,10 @@ let closeBtnForm = document.getElementById("closeForm");
 let open = false;
 closeBtnForm.onclick = closeForm;
 
-function closeForm(){
-   open=false;
-   toggleForm();
-   formIt.reset();
+function closeForm() {
+  open = false;
+  toggleForm();
+  formIt.reset();
 }
 
 let validInput = false;
@@ -657,35 +657,37 @@ t2.oninput = validateInput;
 t4.oninput = validateInput;
 t5.oninput = validateInput;
 //button submit event handler
-sendIt.addEventListener('click',(e)=>{
-   //we pass e to prevent default event
-   fromSubmit(e);
-   closeForm();
+sendIt.addEventListener("click", e => {
+  //we pass e to prevent default event
+  fromSubmit(e);
+  closeForm();
 });
 
 let inputsVals = document.querySelectorAll("#theForm input, #theForm textarea");
 //toggle on off the Form
 function toggleForm() {
-   //submit button disabled on form
+  //submit button disabled on form
   sendIt.disabled = true;
   //
-  open ? formContainer.classList.add("showIT") : formContainer.classList.remove("showIT");
+  open
+    ? formContainer.classList.add("showIT")
+    : formContainer.classList.remove("showIT");
   open
     ? (closeBtnForm.textContent = "  CANCEL   ")
     : (closeBtnForm.textContent = "I'll be back..");
-//   formIt.reset();
+  //   formIt.reset();
 }
 //Input validation
-function validateInput(){
-   if(t2.value&&t4.value&&t5.value){
-      validInput = true;
-   }
-   validateForm();
-   return validInput = false;
+function validateInput() {
+  if (t2.value && t4.value && t5.value) {
+    validInput = true;
+  }
+  validateForm();
+  return (validInput = false);
 }
 //Form validation function
 function validateForm() {
-//   console.log(validInput);
+  //   console.log(validInput);
   validInput ? (sendIt.disabled = false) : (sendIt.disabled = true);
 }
 //from submit form function
@@ -694,11 +696,10 @@ function fromSubmit(e) {
   let address = addrr;
   let pos = latlngAdd;
 
-  
-   let idNewR = `risto-${idNum}`;
-   console.log(idNewR);
+  let idNewR = `risto-${idNum}`;
+  console.log(idNewR);
   let objOne = {
-   place_id: idNewR,
+    place_id: idNewR,
     geometry: {
       location: pos
     },
@@ -731,17 +732,16 @@ function fromSubmit(e) {
   sendIt.disabled = true;
 }
 //just call the json local file
-function callJsonRestaurants(){
-   fetch('./rests.json')
-   .then(response => response.json())
-   .then(data => {
+function callJsonRestaurants() {
+  fetch("./rests.json")
+    .then(response => response.json())
+    .then(data => {
       console.log(data);
-      data.map( item =>{
-         let newRisto = new Restaurant(item, markArray);
-    newRisto.ristoItem();
-    newRisto.ristoMark(markersOnMap);
+      data.map(item => {
+        let newRisto = new Restaurant(item, markArray);
+        newRisto.ristoItem();
+        newRisto.ristoMark(markersOnMap);
       });
-      
-   })
-   .catch(error => console.log('error is', error));
+    })
+    .catch(error => console.log("error is", error));
 }
