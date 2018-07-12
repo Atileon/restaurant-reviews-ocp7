@@ -4,7 +4,7 @@
 ---
 If are you hungry and want to see where's the restaurants near by your position just follow the link below...
 
-## This project is : in progress
+## This project is : finished ...coming soon more details
 
 ### To try it:
 

@@ -88,6 +88,7 @@ function initMap(position) {
     gestureHandling: "greedy",
     styles: [
       //style of map
+
       {
         elementType: "geometry",
         stylers: [
@@ -404,7 +405,7 @@ function initMap(position) {
         elementType: "geometry",
         stylers: [
           {
-            color: "#000000"
+            color: "#00578a"
           }
         ]
       }
@@ -486,6 +487,14 @@ function initMap(position) {
     ASC ? btnAsc.classList.add("on") : btnAsc.classList.remove("on");
     sortRistos();
   });
+  function ascDesc(e) {
+    e.preventDefault();
+    ASC = !ASC;
+    ASC
+      ? (btnAsc.textContent = "ASC \u2191")
+      : (btnAsc.textContent = "DESC \u2193");
+    ASC ? btnAsc.classList.add("on") : btnAsc.classList.remove("on");
+  }
   btnMarks.addEventListener("click", btnMarkers);
   function btnMarkers() {
     // console.log(markArray);
@@ -538,13 +547,13 @@ function initMap(position) {
     }
     return a.dataset.rating - b.dataset.rating;
   }
-  sortRistos();
+//   sortRistos();
 
   // ====GEOCODER===
   map.addListener("dblclick", e => {
     console.log(e);
     idNum = Date.now();
-   //  console.log(idNum);
+    //  console.log(idNum);
     open = true;
     //open the form
     toggleForm();
@@ -555,14 +564,14 @@ function initMap(position) {
     };
     latlngAdd = new google.maps.LatLng(coords);
     console.log(latlngAdd);
-    // Get the address 
+    // Get the address
     geoCoder.geocode({ location: latlngAdd }, coordsGeocode);
 
     return latlngAdd;
   });
 } //End of main function
 
-// callback to nearbySearch method 
+// callback to nearbySearch method
 function fromNearby(results, status, pagination) {
   if (status === "OK") {
     let response = results;
@@ -576,7 +585,7 @@ function fromNearby(results, status, pagination) {
       function() {
         pagination.nextPage();
       };
-   
+
     response.map((res, key) => {
       // console.log(res);
       // console.log(key);
@@ -598,7 +607,8 @@ function fromNearby(results, status, pagination) {
 function toRestaurants(place, status) {
   if (status === "OK") {
     let thePlace = place;
-    //  console.log(place);
+    console.log(place);
+
     //create Object
     let newRisto = new Restaurant(thePlace, markArray);
 
